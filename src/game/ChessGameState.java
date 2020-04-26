@@ -8,7 +8,6 @@ import chess.GameLoader;
 import chess.HumanPlayer;
 import chess.Move;
 import chess.Player;
-import chess.Utility;
 import graphics.Camera;
 import graphics.Geometry;
 import graphics.Sprite;
@@ -24,7 +23,7 @@ public class ChessGameState implements IGameState {
 	private ArrayList<Move> currentMoves;
 	
 	private long startTime;
-	private long moveDuration;
+	private float duration;
 	
 	private Thread currentPlayerThread;
 	
@@ -58,11 +57,11 @@ public class ChessGameState implements IGameState {
 	
 	private void getNextMove() {
 		currentMoves = board.getPossibleMoves();
-		
+
 		getCurrentPlayer().makeMove(board.clone(), currentMoves);
 		
 		startTime = System.nanoTime();
-		moveDuration = 0;
+		duration = 0;
 		
 		currentPlayerThread = new Thread(getCurrentPlayer());
 		currentPlayerThread.start();
@@ -76,13 +75,15 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void playState(float elapsedTime, Game game) {
-		moveDuration = (System.nanoTime() - startTime);
+
 		
 		if (!getCurrentPlayer().isChoosing()) {
 			board = board.move(currentMoves.get(getCurrentPlayer().getChosenMove()));
 			board.setupNextMove();
-		
-			float duration = (float) Math.round(moveDuration / 10000000.0) / 100.0f;
+			
+			long finishTime = (System.nanoTime() - startTime);
+			
+			duration = Math.round(finishTime / 10000000.0) / 100.0f;
 			System.out.println("\nMove duration: " + duration + "s");
 			
 			getNextMove();

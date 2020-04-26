@@ -7,12 +7,12 @@ public class Mapping {
     public static ArrayList<Integer> getCheckMoves(int index, Board board,
             ArrayList<Integer> moveMap) {
         ArrayList<Integer> newMap = new ArrayList<Integer>();
-        
+  
         for (int i = 0; i < moveMap.size(); i++) {
             int to = moveMap.get(i);
 
             Board tmpBoard = board.move(index, to);
-            tmpBoard.justCheck();
+            tmpBoard.check();
             
             if (!tmpBoard.isCheck()) {
                 newMap.add(to);
@@ -142,6 +142,7 @@ public class Mapping {
         }
 
         if (board.isCheck() || Detection.checkThreat(index, board, colour)) {
+        	System.out.println("GET CHECK MOVES");
             moveMap = getCheckMoves(index, board, moveMap);
         }
 

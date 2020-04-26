@@ -157,15 +157,13 @@ public class Board {
 		newBoard.handleSpecialMoves(from, to);
 		newBoard.changePieces(from, to);
 		
+		newBoard.check();
+		
 		return newBoard;
 	}
 	
 	public Board move(Move move) {
 		return move(move.from, move.to);
-	}
-	
-	public void justCheck() {
-		check();
 	}
 	
 	public void setupNextMove() {
@@ -252,11 +250,11 @@ public class Board {
 		pieces[from] = new Piece();
 	}
 
-	private void check() {
+	public void check() {
 		check = Detection.isCheck(colour, this);
 	}
 	
-	private void checkAll() {
+	public void checkAll() {
 		check();
 		
 		checkmate = check && Detection.isCheckmate(colour, this);

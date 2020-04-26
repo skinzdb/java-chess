@@ -71,7 +71,7 @@ public class Pawn extends Piece {
 		ArrayList<Integer> moveMap = new ArrayList<Integer>();
 
         int move = board.getPiece(index).getColour() == Colour.WHITE ? -8 : 8;
-
+        
         if (index + move - 1 >= 0) {
             if (Utility.getCol(index) != 0) {
                 moveMap.add(index + move - 1);

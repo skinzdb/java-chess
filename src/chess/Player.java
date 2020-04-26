@@ -11,17 +11,8 @@ public abstract class Player implements Runnable {
 	protected ArrayList<Move> moves;
 	
 	public void run() {
-		init();
-
-		while (true) {
-			if (chosenMove == -1) {
-				process();
-				break;
-			}
-		}
+		process();
 	}
-	
-	protected abstract void init();
 	
 	protected abstract void process();
 
