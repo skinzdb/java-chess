@@ -13,16 +13,6 @@ public class Queen extends Piece {
         
         imageIndex = colour == Colour.WHITE ? 3 : 11;
     }
-    
-    public Queen(Queen queen) {
-    	this (queen.getColour());
-    	moved = queen.isMoved();
-    }
-    
-    @Override
-    public Queen clone() {
-    	return new Queen(this);
-    }
 
 	@Override
 	public ArrayList<Integer> getMoves(int index, Board board) {

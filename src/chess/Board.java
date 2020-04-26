@@ -50,7 +50,7 @@ public class Board {
 		enPassant = board.getEnPassant();
 		
 		for (int i = 0; i < pieces.length; i++) {
-			this.pieces[i] = board.getPiece(i).clone();
+			this.pieces[i] = board.getPiece(i);
 		}
 		
 		for (String move : board.getGameMoves()) {
@@ -230,9 +230,9 @@ public class Board {
 	}
 
 	private void handleCastling(int from, int to) {
-		int move = to - from;
-
 		if (pieces[from] instanceof King) {
+			int move = to - from;
+			
 			// Queen-side
 			if (move == -2) {			
 				changePieces(Utility.getRow(from) * 8, from - 1);
@@ -240,12 +240,31 @@ public class Board {
 			else if (move == 2) {
 				changePieces(((Utility.getRow(from) + 1) * 8) - 1, from + 1);
 			}
+			
+			if (!castleInfo.isEmpty()) {
+				if (pieces[from].getColour() == Colour.WHITE) {
+					castleInfo.replace("Q", "");
+					castleInfo.replace("K", "");
+				} else {
+					castleInfo.replace("q", "");
+					castleInfo.replace("k", "");
+				}
+			}
+		}
+
+		if (pieces[from] instanceof Rook && !castleInfo.isEmpty()) {
+			if (from == 56)
+				castleInfo.replace("Q", "");
+			else if (from == 63)
+				castleInfo.replace("K", "");
+			else if (from == 0)
+				castleInfo.replace("q", "");
+			else if (from == 7)
+				castleInfo.replace("k", "");
 		}
 	}
 	// move a piece to a new square and make it's starting square empty
 	private void changePieces(int from, int to) {
-		pieces[from].setMoved(true);
-
 		pieces[to] = pieces[from];
 		pieces[from] = new Piece();
 	}

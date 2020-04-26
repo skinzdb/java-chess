@@ -68,33 +68,7 @@ public class Utility {
     }
 
     public static String FEN_castleAvailability(Board board) {
-        if (board.getCastleInfo().isEmpty()) {
-            return "-";
-        }
-        
-        String castleAvailability = "";
-        Piece[] pieces = board.getPieces();
-
-        for (int i = 60; i >= 4; i -= 56) {
-        	if (pieces[i] instanceof King && !pieces[i].isMoved()) {
-        		
-    			int queenside = Utility.getRow(i) * 8;
-    			int kingside = queenside + 7;
-
-    			if (pieces[kingside] instanceof Rook && !pieces[kingside].isMoved()) {
-    				castleAvailability += pieces[i].getColour() == Colour.WHITE ? "K" : "k";
-    			}
-    			if (pieces[queenside] instanceof Rook && !pieces[queenside].isMoved()) {
-    				castleAvailability += pieces[i].getColour() == Colour.WHITE ? "Q" : "q";
-    			}
-    		}
-        }
-	
-        if (castleAvailability.isEmpty()) {
-            castleAvailability = "-";
-        }
-      
-        return castleAvailability;
+        return board.getCastleInfo().isEmpty() ? "-" : board.getCastleInfo();
     }
 
     public static Colour FEN_colour(String FEN) {

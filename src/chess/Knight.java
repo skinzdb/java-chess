@@ -13,16 +13,6 @@ public class Knight extends Piece {
 		
 		imageIndex = colour == Colour.WHITE ? 1 : 9;
 	}
-	
-    public Knight(Knight knight) {
-    	this (knight.getColour());
-    	moved = knight.isMoved();
-    }
-    
-    @Override
-    public Knight clone() {
-    	return new Knight(this);
-    }
 
 	@Override
 	public ArrayList<Integer> getMoves(int index, Board board) {

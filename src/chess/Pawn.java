@@ -14,16 +14,6 @@ public class Pawn extends Piece {
         imageIndex = colour == Colour.WHITE ? 5 : 13;
     }
     
-    public Pawn(Pawn pawn) {
-    	this (pawn.getColour());
-    	moved = pawn.isMoved();
-    }
-    
-    @Override
-    public Pawn clone() {
-    	return new Pawn(this);
-    }
-
     public static ArrayList<Integer> addAttackMoves(int index, Board board) {
         Pawn pawn = (Pawn) board.getPiece(index);
 

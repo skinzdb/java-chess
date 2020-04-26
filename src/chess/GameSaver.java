@@ -21,9 +21,6 @@ public class GameSaver {
                 out.write(piece.getFEN());
             }
             out.newLine();
-            for (int i = 0; i < 8; i++) {
-            	out.write(board.getPiece(i).isMoved() ? "1" : "0");
-            }
 
             out.close();
 

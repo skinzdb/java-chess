@@ -13,27 +13,14 @@ public class King extends Piece {
 		
 		imageIndex = colour == Colour.WHITE ? 4 : 12;
 	}
-	
-    public King(King king) {
-    	this (king.getColour());
-    	moved = king.isMoved();
-    }
-    
-    @Override
-    public King clone() {
-    	return new King(this);
-    }
 
 	public static ArrayList<Integer> addCastleMoves(int index, Board board, ArrayList<Integer> moveMap) {
-		if (board.getPiece(index).isMoved())
-			return moveMap;
-
+		String castleInfo = board.getCastleInfo();
 		Colour colour = board.getPiece(index).getColour();
 
-		if (Detection.checkThreat(index, board, colour))
+		if (castleInfo.isEmpty() || Detection.checkThreat(index, board, colour)) 
 			return moveMap;
 
-		String castleInfo = board.getCastleInfo();
 		boolean canQueenside, canKingside; 
 
 		if (colour == Colour.WHITE) {

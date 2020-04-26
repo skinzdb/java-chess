@@ -14,16 +14,6 @@ public class Rook extends Piece {
         imageIndex = colour == Colour.WHITE ? 6 : 14;
     }
     
-    public Rook(Rook rook) {
-    	this (rook.getColour());
-    	moved = rook.isMoved();
-    }
-    
-    @Override
-    public Rook clone() {
-    	return new Rook(this);
-    }
-
 	@Override
 	public ArrayList<Integer> getMoves(int index, Board board) {
 		 return Mapping.getStraightMoves(index, board.getPieces());

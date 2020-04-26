@@ -1,7 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
-
 public class Detection {
 
     public static boolean isCheck(Colour colour, Board board) {

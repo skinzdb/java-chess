@@ -135,15 +135,14 @@ public class Mapping {
         moveMap = makeFriendly(index, pieces, moveMap);
 
         if (pieces[index] instanceof King) {
-            moveMap = getCheckMoves(index, board, moveMap);
+            moveMap = getCheckMoves(index, board, moveMap);	// can't move into check
             moveMap = King.addCastleMoves(index, board, moveMap);
         } else if (pieces[index] instanceof Pawn) {
             moveMap = Pawn.addAttackMoves(index, board);
         }
 
-        if (board.isCheck() || Detection.checkThreat(index, board, colour)) {
-        	System.out.println("GET CHECK MOVES");
-            moveMap = getCheckMoves(index, board, moveMap);
+        if (board.isCheck() || Detection.checkThreat(index, board, colour)) { // if in check or piece is possibly pinned
+            moveMap = getCheckMoves(index, board, moveMap); 
         }
 
         return moveMap;

@@ -5,30 +5,18 @@ import java.util.ArrayList;
 public class Piece {
 	protected Colour colour;
 	
-	protected int value;
+	protected int value = 0;
 	
-	protected boolean moved;
+	protected String FEN = "";
 	
-	protected String FEN;
-	
-	protected int imageIndex;
-	
-	public Piece(Colour colour) {
-		this();
-		this.colour = colour;
-	}
+	protected int imageIndex = 0;
 	
 	public Piece() {
-		colour = Colour.NONE;
-		
-		value = 0;
-		moved = false;
-		FEN = "";
-		imageIndex = 0;
+		this.colour = Colour.NONE;
 	}
 	
-	public Piece clone() {
-		return new Piece();
+	public Piece(Colour colour) {
+		this.colour = colour;
 	}
 	
 	public ArrayList<Integer> getMoves(int index, Board board) {
@@ -55,14 +43,6 @@ public class Piece {
 		return colour;
 	}
 	
-	public boolean isMoved() {
-		return moved;
-	}
-	
-	public void setMoved(boolean moved) {
-		this.moved = moved;
-	}
-
 	public int getImageIndex() {
 		return imageIndex;
 	}

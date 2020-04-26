@@ -30,12 +30,6 @@ public class GameLoader {
 				board.getTakenPieces().add(Utility.determinePiece(piece));
 			}
 
-			int j = 0;
-			for (String moved : FEN.get(FEN.size() - 1).split("")) {
-				board.getPiece(j).setMoved(moved.equals("1"));
-				j++;
-			}
-
 		} catch (Exception e) {
 			//MessageBox.display("Error", "Could not load game file");
 			return null;
