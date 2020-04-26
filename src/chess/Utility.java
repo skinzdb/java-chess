@@ -76,7 +76,6 @@ public class Utility {
         Piece[] pieces = board.getPieces();
 
         for (int i = 60; i >= 4; i -= 56) {
-        	System.out.println("*** king " + i + ": " + pieces[i].isMoved());
         	if (pieces[i] instanceof King && !pieces[i].isMoved()) {
         		
     			int queenside = Utility.getRow(i) * 8;
