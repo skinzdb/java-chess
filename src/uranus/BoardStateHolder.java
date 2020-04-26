@@ -46,8 +46,13 @@ public class BoardStateHolder {
 				piecesStore[pieceCountCounter/16] |= pieceId<<((pieceCountCounter%16)*4);
 			}
 		}
+<<<<<<< HEAD
 		//b.get
 		//extraState
+=======
+		b.get
+		extraState
+>>>>>>> bc7dce1... progress
 		
 	}
 }
