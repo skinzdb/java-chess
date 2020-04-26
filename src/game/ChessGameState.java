@@ -13,6 +13,7 @@ import graphics.Camera;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
+import uranus.RandomPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -37,8 +38,8 @@ public class ChessGameState implements IGameState {
 	public void initState(Game game) {
 		board = GameLoader.loadDefault();
 		
-		whitePlayer = new HumanPlayer();
-		blackPlayer = new HumanPlayer();
+		whitePlayer = new RandomPlayer();
+		blackPlayer = new RandomPlayer();
 		
 		currentMoves = new ArrayList<>();
 		
