@@ -242,25 +242,25 @@ public class Board {
 			}
 			
 			if (!castleInfo.isEmpty()) {
-				if (pieces[from].getColour() == Colour.WHITE) {
-					castleInfo.replace("Q", "");
-					castleInfo.replace("K", "");
-				} else {
-					castleInfo.replace("q", "");
-					castleInfo.replace("k", "");
+				if (from == 60) {
+					castleInfo = castleInfo.replace("Q", "");
+					castleInfo = castleInfo.replace("K", "");
+				} else if (from == 4) {
+					castleInfo = castleInfo.replace("q", "");
+					castleInfo = castleInfo.replace("k", "");
 				}
 			}
 		}
 
 		if (pieces[from] instanceof Rook && !castleInfo.isEmpty()) {
 			if (from == 56)
-				castleInfo.replace("Q", "");
+				castleInfo = castleInfo.replace("Q", "");
 			else if (from == 63)
-				castleInfo.replace("K", "");
+				castleInfo = castleInfo.replace("K", "");
 			else if (from == 0)
-				castleInfo.replace("q", "");
+				castleInfo = castleInfo.replace("q", "");
 			else if (from == 7)
-				castleInfo.replace("k", "");
+				castleInfo = castleInfo.replace("k", "");
 		}
 	}
 	// move a piece to a new square and make it's starting square empty

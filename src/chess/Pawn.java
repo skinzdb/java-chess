@@ -60,19 +60,20 @@ public class Pawn extends Piece {
 	public ArrayList<Integer> getAttacks(int index, Board board) {
 		ArrayList<Integer> moveMap = new ArrayList<Integer>();
 
-        int move = board.getPiece(index).getColour() == Colour.WHITE ? -8 : 8;
-        
-        if (index + move - 1 >= 0) {
+        int direction = board.getPiece(index).getColour() == Colour.WHITE ? -8 : 8;
+        int leftMove = index + direction - 1; 
+        int rightMove = leftMove + 2;
+        		
+        if (leftMove >= 0 && leftMove < 64) {
             if (Utility.getCol(index) != 0) {
-                moveMap.add(index + move - 1);
+                moveMap.add(leftMove);
             }
 
         }
-        if (index + move + 1 >= 0) {
+        if (rightMove >= 0 && rightMove < 64) {
             if (Utility.getCol(index) != 7) {
-                moveMap.add(index + move + 1);
+                moveMap.add(rightMove);
             }
-
         }
 
         return moveMap;

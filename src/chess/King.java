@@ -17,7 +17,7 @@ public class King extends Piece {
 	public static ArrayList<Integer> addCastleMoves(int index, Board board, ArrayList<Integer> moveMap) {
 		String castleInfo = board.getCastleInfo();
 		Colour colour = board.getPiece(index).getColour();
-
+		
 		if (castleInfo.isEmpty() || Detection.checkThreat(index, board, colour)) 
 			return moveMap;
 
