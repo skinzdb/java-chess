@@ -8,7 +8,7 @@ public abstract class Player implements Runnable {
 	
 	protected Board board;
 	
-	protected ArrayList<Move> moves;
+	protected ArrayList<Move> moves = new ArrayList<>();
 	
 	public void run() {
 		process();
