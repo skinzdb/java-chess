@@ -23,6 +23,9 @@ public class ChessGameState implements IGameState {
 	
 	private ArrayList<Move> currentMoves;
 	
+	private long startTime;
+	private long moveDuration;
+	
 	private Thread currentPlayerThread;
 	
 	private Texture boardTex;
@@ -58,6 +61,9 @@ public class ChessGameState implements IGameState {
 		
 		getCurrentPlayer().makeMove(board.clone(), currentMoves);
 		
+		startTime = System.nanoTime();
+		moveDuration = 0;
+		
 		currentPlayerThread = new Thread(getCurrentPlayer());
 		currentPlayerThread.start();
 	}
@@ -70,9 +76,14 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void playState(float elapsedTime, Game game) {
+		moveDuration = (System.nanoTime() - startTime);
+		
 		if (!getCurrentPlayer().isChoosing()) {
 			board = board.move(currentMoves.get(getCurrentPlayer().getChosenMove()));
 			board.setupNextMove();
+		
+			float duration = (float) Math.round(moveDuration / 10000000.0) / 100.0f;
+			System.out.println("\nMove duration: " + duration + "s");
 			
 			getNextMove();
 		}
