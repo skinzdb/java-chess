@@ -75,9 +75,11 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void playState(float elapsedTime, Game game) {
-
-		
 		if (!getCurrentPlayer().isChoosing()) {
+			int move = getCurrentPlayer().getChosenMove();
+			if (move < 0 || move >= currentMoves.size())
+				move = 0;
+			
 			board = board.move(currentMoves.get(getCurrentPlayer().getChosenMove()));
 			board.setupNextMove();
 			

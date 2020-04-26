@@ -20,7 +20,9 @@ public abstract class Player implements Runnable {
 		chosenMove = -1;
 		
 		this.board = board;
-		this.moves = moves;
+		for (Move move : moves) {
+			this.moves.add(move);
+		}
 	}
 
 	public boolean isChoosing() {
