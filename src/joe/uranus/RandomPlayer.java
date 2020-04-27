@@ -9,7 +9,7 @@ public class RandomPlayer extends Player{
 	Random rand;
 	
 	public RandomPlayer() {
-		
+		rand = new Random();
 	}
 
 	@Override

@@ -66,4 +66,9 @@ public class BoardState {
 		extraData |= (b.getColour() == Colour.WHITE)?1<<11:0;
 	}
 	
+	public int hashCode() {
+		long x = pieceMap ^ extraData ^ pieceData[0] ^ pieceData[1];
+		return (int)((x>>32) ^ (x&0xffffffff));
+	}
+	
 }

@@ -9,7 +9,7 @@ public class King extends Piece {
 		
 		FEN = colour == Colour.WHITE ? "K" : "k";
 		
-		value = 900;
+		value = 200;
 		
 		imageIndex = colour == Colour.WHITE ? 4 : 12;
 	}

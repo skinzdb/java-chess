@@ -14,6 +14,7 @@ import graphics.Camera;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
+import joe.uranus.RandomPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -55,8 +56,8 @@ public class ChessGameState implements IGameState {
 		cam.setScale(60);
 		cam.translate(3.5f, -3.5f);
 		
-		whitePlayer = new HumanPlayer(cam, game.getMouse());
-		blackPlayer = new HumanPlayer(cam, game.getMouse());
+		whitePlayer = new RandomPlayer();
+		blackPlayer = new RandomPlayer();
 		
 		currentSelSquare = -1;
 		
