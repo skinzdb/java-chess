@@ -12,9 +12,10 @@ public class Board {
 	private boolean check;
 	private boolean checkmate;
 	private boolean stalemate;
+	private boolean finished;
 
-	private String castleInfo;
-	private String enPassant;
+	private int castleInfo;
+	private int enPassant;
 
 	private Piece[] pieces;
 	
@@ -28,8 +29,8 @@ public class Board {
 		checkmate = false;
 		stalemate = false;
 		
-		castleInfo = "";
-		enPassant = "-";
+		castleInfo = 0b1111;	
+		enPassant = -1;
 		
 		pieces = new Piece[64];
 		
@@ -78,6 +79,10 @@ public class Board {
 	public boolean isStalemate() {
 		return stalemate;
 	}
+	
+	public boolean isFinished() {
+		return finished;
+	}
 
 	public void setPiece(int index, Piece piece) {
 		pieces[index] = piece;
@@ -111,19 +116,19 @@ public class Board {
 		colour = colour == Colour.WHITE ? Colour.BLACK : Colour.WHITE;
 	}
 
-	public String getCastleInfo() {
+	public int getCastleInfo() {
 		return castleInfo;
 	}
 
-	public void setCastleInfo(String info) {
+	public void setCastleInfo(int info) {
 		castleInfo = info;
 	}
 
-	public String getEnPassant() {
+	public int getEnPassant() {
 		return enPassant;
 	}
 
-	public void setEnPassant(String info) {
+	public void setEnPassant(int info) {
 		enPassant = info;
 	}
 	
@@ -177,7 +182,7 @@ public class Board {
 	}
 	
 	public Board undo() {
-		if (gameMoves.size() == 1 || checkmate || stalemate) {
+		if (gameMoves.size() == 1 || finished) {
 			return this;
 		}
 		
@@ -210,21 +215,21 @@ public class Board {
 
 	private void handleEnPassant(int from, int to) {
 		if (pieces[from] instanceof Pawn) {
-			if (Utility.getMove(to).equals(enPassant)) { // is this square the en passant square?
+			if (to == enPassant) { // is this square the en passant square?
 				// get position of the opposition pawn and remove it
 				int n = pieces[from].getColour() == Colour.WHITE ? 8 : -8;
 				pieces[to + n] = new Piece();
 			}
 		}
 
-		enPassant = "-";
+		enPassant = -1;
 
 		// detect if a pawn has moved 16 squares upwards or downwards (2 ranks)
 		// if so, set the en-passant square to be behind that pawn
 		if (pieces[from] instanceof Pawn) {
 			if (Math.abs(to - from) == 16) {
 				int n = pieces[from].getColour() == Colour.WHITE ? -8 : 8;
-				enPassant = Utility.getMove(from + n);
+				enPassant = from + n;
 			}
 		}
 	}
@@ -241,26 +246,22 @@ public class Board {
 				changePieces(((Utility.getRow(from) + 1) * 8) - 1, from + 1);
 			}
 			
-			if (!castleInfo.isEmpty()) {
-				if (from == 60) {
-					castleInfo = castleInfo.replace("Q", "");
-					castleInfo = castleInfo.replace("K", "");
-				} else if (from == 4) {
-					castleInfo = castleInfo.replace("q", "");
-					castleInfo = castleInfo.replace("k", "");
-				}
+			if (from == 60) {
+				castleInfo &= 0b0011;
+			} else if (from == 4) {
+				castleInfo &= 0b1100;
 			}
 		}
 
-		if (pieces[from] instanceof Rook && !castleInfo.isEmpty()) {
-			if (from == 56)
-			castleInfo = castleInfo.replace("Q", "");
-			else if (from == 63)
-				castleInfo = castleInfo.replace("K", "");
-			else if (from == 0)
-				castleInfo = castleInfo.replace("q", "");
+		if (pieces[from] instanceof Rook) {
+			if (from == 63)
+				castleInfo &= 0b0111;
+			else if (from == 56)
+				castleInfo &= 0b1011;
 			else if (from == 7)
-				castleInfo = castleInfo.replace("k", "");
+				castleInfo &= 0b1101;
+			else if (from == 0)
+				castleInfo &= 0b1110;
 		}
 	}
 	// move a piece to a new square and make it's starting square empty
@@ -278,6 +279,7 @@ public class Board {
 		
 		checkmate = check && Detection.isCheckmate(colour, this);
 		stalemate = !checkmate && Detection.isStalemate(colour, this);
+		finished = checkmate || stalemate;
 	}
 	
 	public int getBoardValue(Colour colour) {

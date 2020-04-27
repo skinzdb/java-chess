@@ -115,6 +115,18 @@ public class ChessGameState implements IGameState {
 	private void getNextMove() {
 		updatePieces();
 		
+		if (board.isFinished()) {
+			if (board.isCheckmate())
+				System.out.println("CHECKMATE! " + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + "WINS");
+			else if (board.isStalemate()) 
+				System.out.println("STALEMATE!\n");
+			
+			whitePlayer.stop();
+			blackPlayer.stop();
+			
+			return;
+		}
+		
 		currentMoves = board.getPossibleMoves();
 
 		getCurrentPlayer().makeMove(board.clone(), currentMoves);
@@ -133,6 +145,9 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void playState(float elapsedTime, Game game) {
+		if (board.isFinished())
+			return;
+		
 		if (!getCurrentPlayer().isChoosing()) {
 			int move = getCurrentPlayer().getChosenMove();
 			if (move < 0 || move >= currentMoves.size())

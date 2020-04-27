@@ -96,6 +96,12 @@ public class Detection {
     		}
     	}
     	
+    	for (int move : new King(colour).getAttacks(index, board)) {
+    		if (!pieces[move].isEmpty() && pieces[move].getColour() != colour) {
+    			if (pieces[move] instanceof King) return true;
+    		}
+    	}
+    	
     	return false;
     }
 }
