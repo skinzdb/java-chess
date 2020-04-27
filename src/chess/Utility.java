@@ -35,7 +35,7 @@ public class Utility {
 		}
 		
         FEN_string += " " + (board.getColour() == Colour.WHITE ? "w" : "b");
-        FEN_string += " " + FEN_castleAvailability(board);
+        FEN_string += " " + castleInfoToFEN(board);
         FEN_string += " " + board.getEnPassant();
         
         return FEN_string;
@@ -57,18 +57,37 @@ public class Utility {
 					}
 					j += Integer.parseInt(s);
 				} else {
-					board.setPiece(index, Utility.determinePiece(s));
+					board.setPiece(index, determinePiece(s));
 				}
 			}
 		}
 
         board.setColour(FEN_split[1].equals("w") ? Colour.WHITE : Colour.BLACK);
-        board.setCastleInfo(FEN_split[2]);
-        board.setEnPassant(FEN_split[3]);
+        board.setCastleInfo(FEN_toCastleInfo(FEN_split[2]));
+        board.setEnPassant(getIndex(FEN_split[3]));
     }
 
-    public static String FEN_castleAvailability(Board board) {
-        return board.getCastleInfo().isEmpty() ? "-" : board.getCastleInfo();
+    public static String castleInfoToFEN(Board board) {
+    	int castleInfo = board.getCastleInfo();
+    	String str = "";
+    	
+    	if ((castleInfo & 0b1000) == 0b1000) str += "K";
+    	if ((castleInfo & 0b0100) == 0b0100) str += "Q";
+    	if ((castleInfo & 0b0010) == 0b0010) str += "k";
+    	if ((castleInfo & 0b0001) == 0b0001) str += "q";
+    	
+        return str.isEmpty() ? "-" : str;
+    }
+    
+    public static int FEN_toCastleInfo(String castleFEN) {
+    	int castleInfo = 0;
+    	
+    	if (castleFEN.contains("K")) castleInfo |= 0b1000;
+    	if (castleFEN.contains("Q")) castleInfo |= 0b0100;
+    	if (castleFEN.contains("k")) castleInfo |= 0b0010;
+    	if (castleFEN.contains("q")) castleInfo |= 0b0001;
+    	
+    	return castleInfo;
     }
 
     public static Colour FEN_colour(String FEN) {
@@ -83,8 +102,8 @@ public class Utility {
     }
 
     public static String getMove(int index) {
-        return COLUMNS[Utility.getCol(index)]
-                + ROWS[8 - Utility.getRow(index) - 1];
+        return COLUMNS[getCol(index)]
+                + ROWS[8 - getRow(index) - 1];
     }
 
     public static Piece determinePiece(String s) {

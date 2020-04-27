@@ -15,20 +15,20 @@ public class King extends Piece {
 	}
 
 	public static ArrayList<Integer> addCastleMoves(int index, Board board, ArrayList<Integer> moveMap) {
-		String castleInfo = board.getCastleInfo();
+		int castleInfo = board.getCastleInfo();
 		Colour colour = board.getPiece(index).getColour();
 		
-		if (castleInfo.isEmpty() || Detection.checkThreat(index, board, colour)) 
+		if (castleInfo == 0 || Detection.checkThreat(index, board, colour)) 
 			return moveMap;
 
 		boolean canQueenside, canKingside; 
 
 		if (colour == Colour.WHITE) {
-			canQueenside = castleInfo.contains("Q");
-			canKingside = castleInfo.contains("K");
+			canKingside = (castleInfo & 0b1000) == 0b1000;
+			canQueenside = (castleInfo & 0b0100) == 0b0100;
 		} else {
-			canQueenside = castleInfo.contains("q");
-			canKingside = castleInfo.contains("k");
+			canKingside = (castleInfo & 0b0010) == 0b0010;
+			canQueenside = (castleInfo & 0b0001) == 0b0001;
 		}
 		
 		int queenside = Utility.getRow(index) * 8;

@@ -6,11 +6,7 @@ import chess.Player;
 
 public class RandomPlayer extends Player{
 	
-	Random rand;
-	
-	public RandomPlayer() {
-		
-	}
+	Random rand = new Random();
 
 	@Override
 	protected void process() {
