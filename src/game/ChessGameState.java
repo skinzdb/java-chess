@@ -91,7 +91,7 @@ public class ChessGameState implements IGameState {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				Sprite boardTile = new Sprite(i, -j, Geometry.quad, boardTex);
-				boardTile.setPointer((i + 1 + j % 2) & 1);
+				boardTile.setPointer((i + j % 2) & 1);
 				int index = j * 8 + i;
 				if (board.isCheck() && board.getPiece(index) instanceof King && board.getPiece(index).getColour() == board.getColour()) { // Highlight the king in check
 					boardTile.setPointer(3);
@@ -126,7 +126,6 @@ public class ChessGameState implements IGameState {
 		currentPlayerThread.start();
 	}
 	
-
 	@Override
 	public void loadState() {
 		
