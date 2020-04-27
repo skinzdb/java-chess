@@ -57,12 +57,8 @@ public class BoardState {
 				pieceNo++;
 			}
 		}
-		extraData = Utility.getIndex(b.getEnPassant())&0x7f;
-		String castInfo = b.getCastleInfo();
-		extraData |= castInfo.contains("K")?1<<7:0;
-		extraData |= castInfo.contains("Q")?1<<8:0;
-		extraData |= castInfo.contains("k")?1<<9:0;
-		extraData |= castInfo.contains("q")?1<<10:0;
+		extraData = b.getEnPassant()&0x7f;
+		extraData |= b.getCastleInfo()<<7;
 		extraData |= (b.getColour() == Colour.WHITE)?1<<11:0;
 	}
 	
