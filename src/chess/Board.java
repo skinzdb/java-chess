@@ -254,7 +254,7 @@ public class Board {
 
 		if (pieces[from] instanceof Rook && !castleInfo.isEmpty()) {
 			if (from == 56)
-				castleInfo = castleInfo.replace("Q", "");
+			castleInfo = castleInfo.replace("Q", "");
 			else if (from == 63)
 				castleInfo = castleInfo.replace("K", "");
 			else if (from == 0)
