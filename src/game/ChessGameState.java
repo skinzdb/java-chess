@@ -6,6 +6,8 @@ import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
 import chess.HumanPlayer;
+import chess.King;
+import chess.Mapping;
 import chess.Move;
 import chess.Player;
 import graphics.Camera;
@@ -20,6 +22,8 @@ public class ChessGameState implements IGameState {
 	private Player whitePlayer;
 	private Player blackPlayer;
 	
+	private int currentSelSquare;
+	
 	private ArrayList<Move> currentMoves;
 	
 	private long startTime;
@@ -30,25 +34,77 @@ public class ChessGameState implements IGameState {
 	private Texture boardTex;
 	private Texture piecesTex;
 	
+	ArrayList<Sprite> boardTiles;
+	ArrayList<Sprite> pieceTiles;
+	
 	private Camera cam;
 	
 	@Override
 	public void initState(Game game) {
 		board = GameLoader.loadDefault();
 		
-		whitePlayer = new HumanPlayer();
-		blackPlayer = new HumanPlayer();
-		
 		currentMoves = new ArrayList<>();
 		
 		boardTex = new Texture("res/board.png", 2);
 		piecesTex = new Texture("res/chess_pieces.png", 4);
 		
+		boardTiles = new ArrayList<>();
+		pieceTiles = new ArrayList<>();
+		
 		cam = new Camera();
 		cam.setScale(60);
-		cam.translate(3.5f, 3.5f);
-
+		cam.translate(3.5f, -3.5f);
+		
+		whitePlayer = new HumanPlayer(cam, game.getMouse());
+		blackPlayer = new HumanPlayer(cam, game.getMouse());
+		
+		currentSelSquare = -1;
+		
+		updateTiles();
+		
 		getNextMove();
+	}
+	
+	private void updatePieces() {
+		pieceTiles.clear();
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Sprite pieceTile = new Sprite(j, -i, Geometry.quad, piecesTex);
+				pieceTile.setPointer(board.getPiece(i * 8 + j).getImageIndex());
+				pieceTile.setDepthLayer(1);
+				pieceTiles.add(pieceTile);
+			}
+		}
+	}
+	
+	private void updateTiles() {
+		boardTiles.clear();
+		
+		ArrayList<Integer> moveMap = new ArrayList<>();
+		
+		if (currentSelSquare != - 1) {
+			moveMap = Mapping.createMoveMap(currentSelSquare, board);
+		}
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Sprite boardTile = new Sprite(i, -j, Geometry.quad, boardTex);
+				boardTile.setPointer((i + 1 + j % 2) & 1);
+				int index = j * 8 + i;
+				if (board.isCheck() && board.getPiece(index) instanceof King && board.getPiece(index).getColour() == board.getColour()) { // Highlight the king in check
+					boardTile.setPointer(3);
+				}
+				if (currentSelSquare == index) { // Highlight selected square
+					boardTile.setPointer(2);
+				} else if (moveMap.contains(index)) { // Highlight where the selected piece can move to
+					boardTile.setPointer(2);
+				}
+				boardTile.setDepthLayer(0);
+				
+				boardTiles.add(boardTile);
+			}
+		}
 	}
 	
 	private Player getCurrentPlayer() {
@@ -56,6 +112,8 @@ public class ChessGameState implements IGameState {
 	}
 	
 	private void getNextMove() {
+		updatePieces();
+		
 		currentMoves = board.getPossibleMoves();
 
 		getCurrentPlayer().makeMove(board.clone(), currentMoves);
@@ -80,35 +138,32 @@ public class ChessGameState implements IGameState {
 			if (move < 0 || move >= currentMoves.size())
 				move = 0;
 			
-			board = board.move(currentMoves.get(getCurrentPlayer().getChosenMove()));
+			board = board.move(currentMoves.get(move));
 			board.setupNextMove();
 			
 			long finishTime = (System.nanoTime() - startTime);
 			
 			duration = Math.round(finishTime / 10000000.0) / 100.0f;
-			System.out.println("\nMove duration: " + duration + "s");
+			System.out.println("Move duration: " + duration + "s\n");
 			
 			getNextMove();
+		}
+		
+		if (currentSelSquare != getCurrentPlayer().getSelectedSquare()) {
+			currentSelSquare = getCurrentPlayer().getSelectedSquare();
+			updateTiles();
 		}
 	}
 
 	@Override
 	public void render(Renderer renderer) {
-		ArrayList<Sprite> boardTiles = new ArrayList<>();
-		ArrayList<Sprite> pieceTiles = new ArrayList<>();
-		
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				Sprite boardTile = new Sprite(i, j, Geometry.quad, boardTex);
-				boardTile.setPointer((i + j % 2) & 1);
-				boardTiles.add(boardTile);
-				
-				Sprite pieceTile = new Sprite(j, 7 - i, Geometry.quad, piecesTex);
-				pieceTile.setPointer(board.getPiece(i * 8 + j).getImageIndex());
-				pieceTiles.add(pieceTile);
-			}
-		}
 		renderer.render(cam, boardTiles, true);
 		renderer.render(cam, pieceTiles, false);
+	}
+
+	@Override
+	public void exitState() {
+		whitePlayer.stop();
+		blackPlayer.stop();
 	}
 }

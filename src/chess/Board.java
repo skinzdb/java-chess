@@ -173,7 +173,7 @@ public class Board {
 		
 		gameMoves.add(Utility.toFEN(this));
 		
-		System.out.println(gameMoves.get(gameMoves.size() - 1));
+		//System.out.println(gameMoves.get(gameMoves.size() - 1));
 	}
 	
 	public Board undo() {

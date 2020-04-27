@@ -1,56 +1,62 @@
 package input;
 
-import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import engine.Display;
+import game.Main;
+import graphics.Camera;
 
 public class Mouse {
-	private final Vector2d currentPos;
+	private final Vector2f currentPos;
 
-	private final Vector2f displayVec;
+	private boolean leftBtnDown;
+	private boolean rightBtnDown;
 
-	private boolean leftBtnDown = false;
-	private boolean rightBtnDown = false;
+	private boolean leftBtnHeld;
+	private boolean rightBtnHeld;
 
-	private boolean leftBtnHeld = false;
-	private boolean rightBtnHeld = false;
-
-	private boolean leftBtnUp = false;
-	private boolean rightBtnUp = false;
+	private boolean leftBtnUp;
+	private boolean rightBtnUp;
 
 	private double yOffset;
 
 	public Mouse() {
-		currentPos = new Vector2d().zero();
-		displayVec = new Vector2f();
+		currentPos = new Vector2f().zero();
+		resetButtonState();
 	}
 
 	public void init(Display window) {
 		GLFW.glfwSetCursorPosCallback(window.getWindowHandle(), (windowHandle, xpos, ypos) -> {
-			currentPos.x = xpos;
-			currentPos.y = ypos;
+			currentPos.x = (float) xpos;
+			currentPos.y = (float) ypos;
 		});
 		GLFW.glfwSetMouseButtonCallback(window.getWindowHandle(), (windowHandle, button, action, mode) -> {
-			leftBtnDown = button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_PRESS;
-			rightBtnDown = button == GLFW.GLFW_MOUSE_BUTTON_2 && action == GLFW.GLFW_PRESS;
-			leftBtnHeld = button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_REPEAT;
-			rightBtnHeld = button == GLFW.GLFW_MOUSE_BUTTON_2 && action == GLFW.GLFW_REPEAT;
-			leftBtnUp = button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_RELEASE;
-			rightBtnUp = button == GLFW.GLFW_MOUSE_BUTTON_2 && action == GLFW.GLFW_RELEASE;
+			leftBtnDown = button == GLFW.GLFW_MOUSE_BUTTON_LEFT && action == GLFW.GLFW_PRESS;
+			rightBtnDown = button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && action == GLFW.GLFW_PRESS;
+			leftBtnHeld = button == GLFW.GLFW_MOUSE_BUTTON_LEFT && action == GLFW.GLFW_REPEAT;
+			rightBtnHeld = button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && action == GLFW.GLFW_REPEAT;
+			leftBtnUp = button == GLFW.GLFW_MOUSE_BUTTON_LEFT && action == GLFW.GLFW_RELEASE;
+			rightBtnUp = button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && action == GLFW.GLFW_RELEASE;
 		});
 		GLFW.glfwSetScrollCallback(window.getWindowHandle(), (windowHandle, xoffset, yoffset) -> {
 			yOffset = yoffset;
 		});
 	}
 
+	public void resetButtonState() {
+		leftBtnDown = false;
+		rightBtnDown = false;
+		
+		leftBtnHeld = false;
+		rightBtnHeld = false;
+		
+		leftBtnUp = false;
+		rightBtnUp = false;
+	}
+	
 	public void update() {
 
-	}
-
-	public Vector2f getDisplayVec() {
-		return displayVec;
 	}
 
 	public boolean isLeftButtonDown() {
@@ -80,8 +86,21 @@ public class Mouse {
 		return yOffset;
 	}
 
-	public Vector2d getCurrentPos() {
+	public Vector2f getCurrentPos() {
 		return currentPos;
+	}
+	
+	public Vector2f getWorldPos(Camera camera) {
+		// make origin the middle of the screen
+		float x = currentPos.x - Main.WIDTH / 2.0f;
+		float y = currentPos.y - Main.HEIGHT / 2.0f;
+		
+		// undo camera transformations
+		Vector2f worldPos = new Vector2f(x, -y);
+		worldPos.div(camera.getScale());
+		worldPos.add(camera.getPosition());
+		
+		return worldPos;
 	}
 
 	public void setScrollOffset(int offset) {

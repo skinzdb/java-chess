@@ -55,6 +55,7 @@ public class GameEngine implements Runnable {
 		timer.init();
 		mouseInput.init(window);
 		keyboardInput.init(window);
+		gameLogic.setupInput(keyboardInput, mouseInput);
 		gameLogic.init(window);
 	}
 
@@ -99,13 +100,13 @@ public class GameEngine implements Runnable {
 	}
 
 	protected void input(float interval) {
-		gameLogic.input(interval, keyboardInput, mouseInput);
+		gameLogic.input(interval);
+		keyboardInput.update();
+		mouseInput.update();
 	}
 
 	protected void update(float interval) {
 		gameLogic.update(interval);
-		keyboardInput.update();
-		mouseInput.update();
 	}
 
 	protected void render() {

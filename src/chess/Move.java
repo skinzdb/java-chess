@@ -9,4 +9,10 @@ public class Move {
 		this.from = from;
 		this.to = to;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		Move move = (Move) o;
+		return move.from == from && move.to == to;
+	}
 }

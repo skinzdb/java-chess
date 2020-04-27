@@ -5,8 +5,8 @@ import engine.IGameLogic;
  
 public class Main {
 
-    static final int WIDTH = 600;
-    static final int HEIGHT = 480;
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 480;
 	
     public static void main(String[] args) {
         try {
