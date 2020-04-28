@@ -58,8 +58,8 @@ public class ChessGameState implements IGameState {
 		cam.setScale(60);
 		cam.translate(3.5f, -3.5f);
 		
-		whitePlayer = new UranusPlayer(Colour.WHITE);
-		blackPlayer = new UranusPlayer(Colour.BLACK);
+		whitePlayer = new BetterPlayer();
+		blackPlayer = new RandomPlayer();
 		
 		currentSelSquare = -1;
 		
@@ -119,8 +119,6 @@ public class ChessGameState implements IGameState {
 		
 		currentSelSquare = -1;
 		updateTiles();
-		
-		System.out.println("BOARD VALUE: " + board.getBoardValue());
 		
 		if (board.isFinished()) {
 			if (board.isCheckmate())

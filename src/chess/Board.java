@@ -282,14 +282,14 @@ public class Board {
 		finished = checkmate || stalemate;
 	}
 	
-	public int getBoardValue() {
+	public int getBoardValue(Colour colour) {
 		int totalValue = 0;
 
 		for (Piece p : pieces) {
 			if (p.isEmpty())
 				continue;
 			int value = p.getValue();
-			totalValue += p.getColour() == Colour.WHITE ? value : -value;
+			totalValue += p.getColour() == colour ? value : -value;
 		}
 
 		return totalValue;

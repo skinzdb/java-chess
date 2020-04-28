@@ -1,8 +1,6 @@
 package david.betelgeuse;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Random;
 
 import chess.Board;
@@ -28,38 +26,37 @@ public class BetterPlayer extends Player {
 		
 		Colour colour = board.getColour();
 		ArrayList<Integer> values = new ArrayList<>();
-		if (colour == Colour.BLACK) 
-			bestVal = -bestVal;
-		
 		int counter = 0;
 		for (Move m : moves) {
 			Board tmpBoard = board.move(m);
 			tmpBoard.setupNextMove();
-			int val = tmpBoard.getBoardValue();
+			int val = tmpBoard.getBoardValue(colour);
 			
 			if (tmpBoard.isCheckmate()) {
 				setChosenMove(counter);
 				return;
 			}
 			
-			if ((colour == Colour.WHITE) == (val > bestVal)) {
+			if (val >= bestVal) {
 				bestVal = val;
 				bestMoves.add(counter);
+				bestVals.add(val);
 				bestMove = counter;
 			}
 			values.add(val);
 			counter++;
 		}
+		System.out.println(bestMoves);
 		
+		int bM = bestMove;
 		if (bestMoves.size() > 3) {
-			int bM = 0;
 			do {
 				bM = bestMoves.get(rand.nextInt(bestMoves.size()));
-			} while (Math.abs(bestVals.get(bestMoves.indexOf(bM)) - bestVals.get(bestMoves.indexOf(bestMove))) < 20);
+			} while (Math.abs(bestVals.get(bestMoves.indexOf(bM)) - bestVals.get(bestVals.size() - 1)) > 20);
 
 		}
 		
-		setChosenMove(bestMove);
+		setChosenMove(bM);
 	}
 	
 	/*
