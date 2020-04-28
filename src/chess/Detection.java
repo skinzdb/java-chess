@@ -86,7 +86,7 @@ public class Detection {
     	}
     	
     	if (pieces[index] instanceof Pawn) {
-    		if (Utility.getMove(index + (colour == Colour.WHITE ? 8 : -8)).equals(board.getEnPassant())) {
+    		if (index + (colour == Colour.WHITE ? 8 : -8)==(board.getEnPassant())) {
         		if (Utility.getCol(index) > 0) {
         	    	if (pieces[index - 1] instanceof Pawn) return true;
         		}

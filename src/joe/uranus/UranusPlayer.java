@@ -19,7 +19,7 @@ import chess.Player;
 public class UranusPlayer extends Player{
 
 	//private final long treeTime = 1000000000L;
-	private final long treeTime = 500000000L;
+	private final long treeTime = 4000000000L;
 	private Colour colour;
 	private PrintWriter joesdump;
 	
@@ -48,6 +48,7 @@ public class UranusPlayer extends Player{
 		int maxOrder = 0;
 
 		HashMap<BoardState, BoardState> visitedStates = new HashMap<BoardState, BoardState>();
+		
 		Queue<BoardBoredBoardStateStruct> boardStates = new LinkedList<BoardBoredBoardStateStruct>();
 		
 		BoardState masterState = new BoardState(board);
@@ -71,7 +72,7 @@ public class UranusPlayer extends Player{
 			parentState = visitedStates.get(parentState);
 			
 			parentState.children.add(boardState);
-			boardState.ParentStates.add(parentState);
+			//boardState.ParentStates.add(parentState);
 			if(!visitedStates.containsKey(boardState)) {
 				visitedStates.put(boardState, boardState);
 				boardState.order = parentState.order+1;
@@ -97,10 +98,10 @@ public class UranusPlayer extends Player{
 		
 		for (BoardBoredBoardStateStruct bss : boardStates) {
 			if(bss.board.getColour() == Colour.WHITE) {
-				bss.parent.score = Math.max(bss.parent.score, UUtils.evalBoard(bss.board));
+				bss.parent.score = Math.min(bss.parent.score, UUtils.evalBoard(bss.board));
 			}
 			else {
-				bss.parent.score = Math.min(bss.parent.score, UUtils.evalBoard(bss.board));
+				bss.parent.score = Math.max(bss.parent.score, UUtils.evalBoard(bss.board));
 			}
 			//joesdump.println("bss score: " + bss.parent.score);
 			bottomStates.add(bss.parent);//sort out the bottom
@@ -119,7 +120,7 @@ public class UranusPlayer extends Player{
 			tBoard.setupNextMove();
 			BoardState bs = new BoardState(tBoard);
 			bs = visitedStates.getOrDefault(bs, bs);
-			System.out.println(moveIndex + " " + bs.score);
+			//System.out.println(moveIndex + " " + bs.score);
 			if(bs.score == best) {
 				bestMoves.add(moveIndex);
 			}
@@ -127,7 +128,7 @@ public class UranusPlayer extends Player{
 		}
 		
 
-		joesdump.close();
+		//joesdump.close();
 		//setChosenMove(0);
 		setChosenMove(bestMoves.get(rand.nextInt(bestMoves.size())));
 	}
@@ -135,10 +136,17 @@ public class UranusPlayer extends Player{
 	public int getBest(BoardState masterState) {//recursive hell
 		//int best = 
 		if(!masterState.children.isEmpty()) {
-			int best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? -1000000000 : 1000000000;
+			int best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? 1000000000 : -1000000000;
+			int numUsed = 0;
 			for (BoardState child : masterState.children) {
-				if(child.order > masterState.order)
-					best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? Math.max(best, getBest(child)) : Math.min(best, getBest(child));
+				if(child.order > masterState.order) {
+					best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? Math.min(best, getBest(child)) : Math.max(best, getBest(child));
+					numUsed++;
+				}
+			}
+			if (numUsed == 0) {
+				masterState.score = UUtils.evalBoard(masterState.toBoard());
+				return masterState.score;
 			}
 			masterState.score = best;
 			return best;

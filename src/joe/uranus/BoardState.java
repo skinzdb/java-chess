@@ -26,7 +26,7 @@ public class BoardState {
 	public int score;
 
 	public HashSet<BoardState> children = new HashSet<BoardState>();
-	public HashSet<BoardState> ParentStates = new HashSet<BoardState>();
+	//public HashSet<BoardState> ParentStates = new HashSet<BoardState>();
 	
 	public BoardState(Board b) {
 		int pieceNo = 0;
@@ -73,6 +73,60 @@ public class BoardState {
 		else {
 			score = 1000000000;//bad for black
 		}
+	}
+	
+	public Board toBoard() {
+		Board b = new Board();
+		Piece[] ps = b.getPieces();
+		int pCounter = 0;
+		for(int i = 0; i < 64; i++) {
+			if((pieceMap&(1<<i)) != 0) {
+				int pieceCode = (int) (pieceData[pCounter / 16] >> ((pCounter % 16) * 4)) & 0xf;
+				if(pieceCode == 0) {
+					ps[i] = new Pawn(Colour.WHITE);
+				}
+				else if(pieceCode == 1) {
+					ps[i] = new Rook(Colour.WHITE);
+				}
+				else if(pieceCode == 2) {
+					ps[i] = new Knight(Colour.WHITE);
+				}
+				else if(pieceCode == 3) {
+					ps[i] = new Bishop(Colour.WHITE);
+				}
+				else if(pieceCode == 4) {
+					ps[i] = new Queen(Colour.WHITE);
+				}
+				else if(pieceCode == 5) {
+					ps[i] = new King(Colour.WHITE);
+				}
+				else if(pieceCode == 8) {
+					ps[i] = new Pawn(Colour.BLACK);
+				}
+				else if(pieceCode == 9) {
+					ps[i] = new Rook(Colour.BLACK);
+				}
+				else if(pieceCode == 10) {
+					ps[i] = new Knight(Colour.BLACK);
+				}
+				else if(pieceCode == 11) {
+					ps[i] = new Bishop(Colour.BLACK);
+				}
+				else if(pieceCode == 12) {
+					ps[i] = new Queen(Colour.BLACK);
+				}
+				else if(pieceCode == 13) {
+					ps[i] = new King(Colour.BLACK);
+				}
+			}
+			else {
+				ps[i] = new Piece();
+			}
+		}
+		b.setCastleInfo((int) ((extraData>>7)&0xf));
+		b.setEnPassant((int) (extraData&0x7f));
+		b.setColour((extraData&11)==0 ? Colour.WHITE: Colour.BLACK);
+		return b;
 	}
 	
 	public int hashCode() {
