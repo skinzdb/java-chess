@@ -21,7 +21,7 @@ public class Board {
 	
 	private ArrayList<String> gameMoves; // list of all the the moves made (saved in FEN)
 	private ArrayList<Piece> takenPieces;
-
+	
 	public Board() {
 		colour = Colour.WHITE;
 		
@@ -152,7 +152,7 @@ public class Board {
 		if (checkmate || stalemate) {
 			return this;
 		}
-		
+
 		Board newBoard = clone();
 	
 		if (!pieces[to].isEmpty()) {
@@ -185,7 +185,7 @@ public class Board {
 		if (gameMoves.size() == 1 || finished) {
 			return this;
 		}
-		
+
 		Board newBoard = clone();
 		
 		Utility.loadFEN(newBoard, gameMoves.get(gameMoves.size() - 2));
@@ -282,20 +282,20 @@ public class Board {
 		finished = checkmate || stalemate;
 	}
 	
-	public int getBoardValue(Colour colour) {
+	public int getBoardValue() {
 		int totalValue = 0;
 
 		for (Piece p : pieces) {
 			if (p.isEmpty())
 				continue;
 			int value = p.getValue();
-			totalValue += p.getColour() == colour ? value : -value;
+			totalValue += p.getColour() == Colour.WHITE ? value : -value;
 		}
 
 		return totalValue;
 	}
 
-	public ArrayList<Move> getPossibleMoves() {
+	public ArrayList<Move> getPossibleMoves() {	
 		ArrayList<Move> moves = new ArrayList<>();
 		
 		for (int i = 0; i < 64; i++) {
@@ -305,7 +305,7 @@ public class Board {
 				}
 			}
 		}
-
+		
 		return moves;
 	}
 }

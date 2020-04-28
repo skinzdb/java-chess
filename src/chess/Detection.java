@@ -24,21 +24,7 @@ public class Detection {
     }
 
     public static boolean isStalemate(Colour colour, Board board) {
-        if (board.isCheck()) {
-            return false;
-        }
-
-        Piece[] pieces = board.getPieces();
-
-        for (int i = 0; i < 64; i++) {
-            if (pieces[i].getColour() == colour) {
-                if (!Mapping.createMoveMap(i, board).isEmpty()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return !board.isCheck() && isCheckmate(colour, board);
     }
 
     /* SLOWER

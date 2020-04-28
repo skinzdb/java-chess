@@ -10,6 +10,7 @@ import chess.King;
 import chess.Mapping;
 import chess.Move;
 import chess.Player;
+import david.betelgeuse.BetterPlayer;
 import graphics.Camera;
 import graphics.Geometry;
 import graphics.Sprite;
@@ -56,7 +57,7 @@ public class ChessGameState implements IGameState {
 		cam.setScale(60);
 		cam.translate(3.5f, -3.5f);
 		
-		whitePlayer = new RandomPlayer();
+		whitePlayer = new BetterPlayer();
 		blackPlayer = new RandomPlayer();
 		
 		currentSelSquare = -1;
@@ -115,9 +116,14 @@ public class ChessGameState implements IGameState {
 	private void getNextMove() {
 		updatePieces();
 		
+		currentSelSquare = -1;
+		updateTiles();
+		
+		System.out.println("BOARD VALUE: " + board.getBoardValue());
+		
 		if (board.isFinished()) {
 			if (board.isCheckmate())
-				System.out.println("CHECKMATE! " + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + "WINS");
+				System.out.println("CHECKMATE! " + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + " WINS");
 			else if (board.isStalemate()) 
 				System.out.println("STALEMATE!\n");
 			
@@ -156,9 +162,9 @@ public class ChessGameState implements IGameState {
 			board = board.move(currentMoves.get(move));
 			board.setupNextMove();
 			
-			long finishTime = (System.nanoTime() - startTime);
+			long unroundedDuration = (System.nanoTime() - startTime);
 			
-			duration = Math.round(finishTime / 10000000.0) / 100.0f;
+			duration = Math.round(unroundedDuration / 1000000) / 1000.0f;
 			System.out.println("Move duration: " + duration + "s\n");
 			
 			getNextMove();

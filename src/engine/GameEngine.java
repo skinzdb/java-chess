@@ -5,8 +5,8 @@ import input.Mouse;
 
 public class GameEngine implements Runnable {
 
-	public static final int TARGET_FPS = 60;
-	public static final int TARGET_UPS = 30;
+	public static final int TARGET_FPS = 300;
+	public static final int TARGET_UPS = 300;
 
 	private final Display window;
 

@@ -15,4 +15,9 @@ public class Move {
 		Move move = (Move) o;
 		return move.from == from && move.to == to;
 	}
+	
+	@Override
+	public String toString() {
+		return from + " -> " + to;
+	}
 }

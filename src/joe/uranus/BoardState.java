@@ -11,7 +11,6 @@ import chess.Pawn;
 import chess.Piece;
 import chess.Queen;
 import chess.Rook;
-import chess.Utility;
 
 public class BoardState {
 
