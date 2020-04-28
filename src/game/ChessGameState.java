@@ -15,6 +15,7 @@ import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
 import joe.uranus.RandomPlayer;
+import joe.uranus.UranusPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -56,7 +57,7 @@ public class ChessGameState implements IGameState {
 		cam.setScale(60);
 		cam.translate(3.5f, -3.5f);
 		
-		whitePlayer = new RandomPlayer();
+		whitePlayer = new UranusPlayer(Colour.WHITE);
 		blackPlayer = new RandomPlayer();
 		
 		currentSelSquare = -1;
@@ -147,18 +148,18 @@ public class ChessGameState implements IGameState {
 	public void playState(float elapsedTime, Game game) {
 		if (board.isFinished())
 			return;
-		
+
 		if (!getCurrentPlayer().isChoosing()) {
 			int move = getCurrentPlayer().getChosenMove();
 			if (move < 0 || move >= currentMoves.size())
 				move = 0;
 			
+			
 			board = board.move(currentMoves.get(move));
 			board.setupNextMove();
-			
+
 			long finishTime = (System.nanoTime() - startTime);
-			
-			duration = Math.round(finishTime / 10000000.0) / 100.0f;
+			duration = finishTime / 100000L / 10000.0f;
 			System.out.println("Move duration: " + duration + "s\n");
 			
 			getNextMove();
