@@ -68,10 +68,10 @@ public class BoardState {
 
 		order = 0;
 		if(b.getColour() == Colour.WHITE) {
-			score = -1000000000;//bad for white
+			score = 1000000000;//bad for white
 		}
 		else {
-			score = 1000000000;//bad for black
+			score = -1000000000;//bad for black
 		}
 	}
 	

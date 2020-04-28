@@ -19,7 +19,7 @@ import chess.Player;
 public class UranusPlayer extends Player{
 
 	//private final long treeTime = 1000000000L;
-	private final long treeTime = 4000000000L;
+	private final long treeTime = 3000000000L;
 	private Colour colour;
 	private PrintWriter joesdump;
 	
@@ -27,10 +27,6 @@ public class UranusPlayer extends Player{
 	
 	public UranusPlayer(Colour col) {
 		colour = col;
-	}
-	
-	@Override
-	protected void process() {
 		try {
 			joesdump = new PrintWriter("JDump.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
@@ -40,6 +36,10 @@ public class UranusPlayer extends Player{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void process() {
 		long endTimeTarget = System.nanoTime() + treeTime;
 		
 		int repeats = 0;
@@ -94,24 +94,19 @@ public class UranusPlayer extends Player{
 			}
 		}
 		
-		HashSet<BoardState> bottomStates = new HashSet<BoardState>();
-		
 		for (BoardBoredBoardStateStruct bss : boardStates) {
-			if(bss.board.getColour() == Colour.WHITE) {
-				bss.parent.score = Math.min(bss.parent.score, UUtils.evalBoard(bss.board));
-			}
-			else {
-				bss.parent.score = Math.max(bss.parent.score, UUtils.evalBoard(bss.board));
-			}
-			//joesdump.println("bss score: " + bss.parent.score);
-			bottomStates.add(bss.parent);//sort out the bottom
+			BoardState bs = new BoardState(bss.board);
+			bs.score = UUtils.evalBoard(bss.board);
+			bss.parent.children.add(bs);
 		}
 		
 		int best = getBest(masterState);
-
+		
 		//joesdump.println(best);
 		System.out.println(UUtils.evalBoard(board) + " -> " + best);
+		joesdump.println(UUtils.evalBoard(board) + " -> " + best);
 		System.out.println("JStats: " + repeats + " " + boardsAdded + " " + boardsMoved + " " + maxOrder);
+		joesdump.println("JStats: " + repeats + " " + boardsAdded + " " + boardsMoved + " " + maxOrder);
 		
 		ArrayList<Integer> bestMoves = new ArrayList<Integer>();
 		int moveIndex = 0;
@@ -120,7 +115,7 @@ public class UranusPlayer extends Player{
 			tBoard.setupNextMove();
 			BoardState bs = new BoardState(tBoard);
 			bs = visitedStates.getOrDefault(bs, bs);
-			//System.out.println(moveIndex + " " + bs.score);
+			joesdump.println(moveIndex + " " + bs.score);
 			if(bs.score == best) {
 				bestMoves.add(moveIndex);
 			}

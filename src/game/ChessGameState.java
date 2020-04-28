@@ -58,7 +58,7 @@ public class ChessGameState implements IGameState {
 		cam.translate(3.5f, -3.5f);
 		
 		whitePlayer = new UranusPlayer(Colour.WHITE);
-		blackPlayer = new RandomPlayer();
+		blackPlayer = new UranusPlayer(Colour.BLACK);
 		
 		currentSelSquare = -1;
 		
