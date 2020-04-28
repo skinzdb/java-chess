@@ -19,7 +19,7 @@ import chess.Player;
 public class UranusPlayer extends Player{
 
 	//private final long treeTime = 1000000000L;
-	private final long treeTime = 3000000000L;
+	private final long treeTime = 250000000L;
 	private Colour colour;
 	private PrintWriter joesdump;
 	
@@ -131,11 +131,11 @@ public class UranusPlayer extends Player{
 	public int getBest(BoardState masterState) {//recursive hell
 		//int best = 
 		if(!masterState.children.isEmpty()) {
-			int best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? 1000000000 : -1000000000;
+			int best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? -1000000000 : 1000000000;
 			int numUsed = 0;
 			for (BoardState child : masterState.children) {
 				if(child.order > masterState.order) {
-					best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? Math.min(best, getBest(child)) : Math.max(best, getBest(child));
+					best = (masterState.extraData&BoardState.COLOUR_MASK)==0 ? Math.max(best, getBest(child)) : Math.min(best, getBest(child));
 					numUsed++;
 				}
 			}
