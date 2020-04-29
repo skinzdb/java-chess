@@ -12,15 +12,16 @@ public class GameSaver {
         try {
             out = new BufferedWriter(new FileWriter(filename));
 
-            for (String move : board.getGameMoves()) {
-                out.write(move);
-                out.newLine();
-            }
-
+            out.write('~');
             for (Piece piece : board.getTakenPieces()) {
                 out.write(piece.getFEN());
             }
             out.newLine();
+            
+            for (String move : board.getGameMoves()) {
+                out.write(move);
+                out.newLine();
+            }
 
             out.close();
 

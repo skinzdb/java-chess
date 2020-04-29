@@ -36,7 +36,7 @@ public class Utility {
 		
         FEN_string += " " + (board.getColour() == Colour.WHITE ? "w" : "b");
         FEN_string += " " + castleInfoToFEN(board);
-        FEN_string += " " + board.getEnPassant();
+        FEN_string += " " + (board.getEnPassant() == -1 ? "-" : getMove(board.getEnPassant()));
         
         return FEN_string;
     }
@@ -103,7 +103,7 @@ public class Utility {
 
     public static String getMove(int index) {
         return COLUMNS[getCol(index)]
-                + ROWS[8 - getRow(index) - 1];
+                + ROWS[7 - getRow(index)];
     }
 
     public static Piece determinePiece(String s) {
