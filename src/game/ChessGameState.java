@@ -13,6 +13,7 @@ import chess.Mapping;
 import chess.Move;
 import chess.Piece;
 import chess.Player;
+import david.betelgeuse.BetterPlayer;
 import graphics.Camera;
 import graphics.GUIImage;
 import graphics.GUIText;
@@ -20,6 +21,7 @@ import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
 import joe.uranus.RandomPlayer;
+import joe.uranus.UranusPlayer;
 
 public class ChessGameState implements IGameState {
 
