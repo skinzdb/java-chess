@@ -20,29 +20,37 @@ public class BetterPlayer extends Player {
 		ArrayList<Integer> bestMoves = new ArrayList<>();
 		ArrayList<Integer> bestVals = new ArrayList<>();
 		
-		checkBonus = 25;
-		bestVal = -99999;
-		bestMove = -1;
-		
 		Colour colour = board.getColour();
 		
+		checkBonus = 25;
+		bestVal = colour == Colour.WHITE ? -10000 : 10000;
+		bestMove = -1;
+	
 		ArrayList<Integer> values = new ArrayList<>();
 		int counter = 0;
 		for (Move m : moves) {
 			Board tmpBoard = board.move(m);
 			tmpBoard.setupNextMove();
-			int val = minimax(m, board, 4);
+			int val = minimax(m, board, 2);
 			
 			if (tmpBoard.isCheck()) {
-				val += checkBonus;
+				val += colour == Colour.WHITE ? checkBonus : -checkBonus;
 			}
 			
 			if (tmpBoard.isCheckmate()) {
 				setChosenMove(counter);
 				return;
 			}
+			tmpBoard.swapColour();
+			if (tmpBoard.isCheckmate()) {
+				if (colour == Colour.WHITE) 
+					val -= 100000;
+				else
+					val += 100000;
+			}
+			tmpBoard.swapColour();
 			
-			if (val >= bestVal) {
+			if ((val > bestVal) == (colour == Colour.WHITE)) {
 				bestVal = val;
 				bestMoves.add(counter);
 				bestVals.add(val);

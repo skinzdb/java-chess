@@ -11,6 +11,7 @@ import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
 import chess.GameSaver;
+import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
 import chess.Move;
@@ -24,7 +25,6 @@ import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
 import input.Keyboard;
-import joe.uranus.UranusPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -86,10 +86,10 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().translate(14f, -18f);
 
 		//whitePlayer = new RandomPlayer();
-		whitePlayer = new UranusPlayer(Colour.WHITE);
+		//whitePlayer = new RandomPlayer();
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
-		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		whitePlayer = new HumanPlayer(cam, game.getMouse());
 		//whitePlayer = new BetterPlayer();
 		//whitePlayer = new UranusPlayer(Colour.WHITE);
 		blackPlayer = new BetterPlayer();
@@ -261,7 +261,7 @@ public class ChessGameState implements IGameState {
 	}
 
 	private void saveGame(String filename) {
-		String name = filename + " " + saveDateFormat.format(new Date());
+		String name = filename + " " + saveDateFormat.format(new Date()) + ".txt";
 		GameSaver.saveGame(name, board);
 		System.out.println("SAVED: " + name);
 	}
