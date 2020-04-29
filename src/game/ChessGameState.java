@@ -1,28 +1,35 @@
 package game;
 
-import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.lwjgl.glfw.GLFW;
 
 import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
 import chess.GameSaver;
-import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
 import chess.Move;
 import chess.Piece;
 import chess.Player;
+import david.betelgeuse.BetterPlayer;
 import graphics.Camera;
 import graphics.GUIImage;
 import graphics.GUIText;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
-import joe.uranus.RandomPlayer;
+import input.Keyboard;
+import joe.uranus.UranusPlayer;
 
 public class ChessGameState implements IGameState {
 
+	private Game game;
+	
 	private Board board;
 	
 	private Player whitePlayer;
@@ -52,8 +59,11 @@ public class ChessGameState implements IGameState {
 	private GUIImage takenWImg;
 	private GUIImage takenBImg;
 	
+	private DateFormat saveDateFormat = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+	
 	@Override
 	public void initState(Game game) {
+		this.game = game;
 		//board = GameLoader.load(new File("res/fool.txt"));
 		board = GameLoader.loadDefault();
 		
@@ -110,11 +120,7 @@ public class ChessGameState implements IGameState {
 	
 	private void updateTiles() {
 		boardTiles.clear();
-		
-		if(board.isFinished()) {
-			currentSelSquare = -1;
-			GameSaver.saveGame("game.cgm", board);
-		}
+
 		ArrayList<Integer> moveMap = new ArrayList<>();
 		
 		if (board.isFinished()) {
@@ -192,6 +198,8 @@ public class ChessGameState implements IGameState {
 				turnText.setText("GAME ENDED!\nIT'S A DRAW!");
 			}
 			
+			saveGame("GAME (FINISHED)");
+			
 			whitePlayer.stop();
 			blackPlayer.stop();
 			
@@ -216,6 +224,8 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void playState(float elapsedTime, Game game) {
+		updateInput();
+		
 		if (board.isFinished())
 			return;
 
@@ -223,7 +233,6 @@ public class ChessGameState implements IGameState {
 			int move = getCurrentPlayer().getChosenMove();
 			if (move < 0 || move >= currentMoves.size())
 				move = 0;
-			
 			
 			board = board.move(currentMoves.get(move));
 			board.setupNextMove();
@@ -240,7 +249,23 @@ public class ChessGameState implements IGameState {
 			updateTiles();
 		}
 	}
+	
+	private void updateInput() {
+		Keyboard keyboard = game.getKeyboard();
+		
+		if (keyboard.keyUp(GLFW.GLFW_KEY_LEFT_CONTROL) && keyboard.keyUp(GLFW.GLFW_KEY_S)) { // save game
+			saveGame("GAME (MIDWAY)");
+		}
+		
+		keyboard.resetState();
+	}
 
+	private void saveGame(String filename) {
+		String name = filename + " " + saveDateFormat.format(new Date());
+		GameSaver.saveGame(name, board);
+		System.out.println("SAVED: " + name);
+	}
+	
 	@Override
 	public void render(Renderer renderer) {
 		renderer.render(cam, boardTiles, true);

@@ -10,11 +10,11 @@ import java.util.List;
 
 public class GameLoader {
 
-	public static Board load(File file) {
+	public static Board load(String filename) {
 		Board board = new Board();
 
 		try {
-			List<String> FEN = readFile(file);
+			List<String> FEN = readFile(new File(filename));
 
 			if (FEN == null) {
 				return null;
@@ -23,12 +23,18 @@ public class GameLoader {
 			Utility.loadFEN(board, FEN.get(FEN.size() - 1));
 
 			for (int i = 0; i < FEN.size(); i++) {
-				board.getGameMoves().add(FEN.get(i));
+				String line = FEN.get(i);
+
+				if (line.startsWith("~")) { // line that stores taken pieces starts with tilde, ~
+					for (String piece : line.split("")) {
+						board.getTakenPieces().add(Utility.determinePiece(piece));
+					}
+				} else {
+					board.getGameMoves().add(line);
+					if (i == FEN.size() - 1) Utility.loadFEN(board, line);
+				}
 			}
 
-			//for (String piece : FEN.get(FEN.size() - 2).split("")) {
-			//	board.getTakenPieces().add(Utility.determinePiece(piece));
-			//}
 
 		} catch (Exception e) {
 			e.printStackTrace();
