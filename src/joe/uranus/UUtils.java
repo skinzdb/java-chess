@@ -43,8 +43,26 @@ public class UUtils {
 	private static final int [][] MASK_MAP = {{}, KNIGHT_MASK, BISHOP_MASK, QUEEN_MASK, KING_MASK, WPAWN_MASK, ROOK_MASK, {},
 											  {}, KNIGHT_MASK, BISHOP_MASK, QUEEN_MASK, KING_MASK, BPAWN_MASK, ROOK_MASK, {}};
 	
+	private static final int[] BLACK_BONUS_MASK = {3,3,3,3,3,3,3,3,
+												   3,3,3,3,3,3,3,3,
+												   3,3,4,4,4,4,3,3,
+												   3,4,4,5,5,4,4,3,
+												   4,5,5,6,6,5,5,4,
+												   5,5,6,6,6,6,5,5,
+												   5,5,5,5,5,5,5,5,
+												   5,5,5,5,5,5,5,5};
+	
+	private static final int[] WHITE_BONUS_MASK = {5,5,5,5,5,5,5,5,
+												   5,5,5,5,5,5,5,5,
+												   5,5,6,6,6,6,5,5,
+												   4,5,5,6,6,5,5,4,
+												   3,4,4,5,5,4,4,3,
+												   3,3,4,4,4,4,3,3,
+												   3,3,3,3,3,3,3,3,
+												   3,3,3,3,3,3,3,3};
+	
 	public static int evalBoard(Board b) {
-		int val = b.getBoardValue(Colour.WHITE)*5;
+		int val = b.getBoardValue(Colour.WHITE)*25;
 		Colour boardCol = b.getColour();
 
 		int posCounter = 0;
@@ -57,10 +75,10 @@ public class UUtils {
 				int y = yPos+ mask[i+1];
 				if(x>=0 && x<8 && y>=0 && y<8) {
 					if(p.getColour() == Colour.WHITE) {
-						val+=b.getPieces()[x+(y<<3)].getValue();
+						val+=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.WHITE?1:4) + WHITE_BONUS_MASK[x+(y<<3)]*5;
 					}
 					else {
-						val-=b.getPieces()[x+(y<<3)].getValue();
+						val-=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.BLACK?1:4) + BLACK_BONUS_MASK[x+(y<<3)]*5;
 					}
 				}
 			}
@@ -70,19 +88,21 @@ public class UUtils {
 		b.setColour(Colour.WHITE);
 		b.checkAll();
 		if(b.isCheckmate()) {
-			val-=100000;
+			//System.out.println("CheckMate w");
+			val-=1000000;
 		}
 		ArrayList<Move> moves = b.getPossibleMoves();
-		val+=moves.size();
+		val+=moves.size()*5;
 		b.setEnPassant(-1);
 		
 		b.setColour(Colour.BLACK);
 		b.checkAll();
 		if(b.isCheckmate()) {
-			val+=100000;
+			//System.out.println("CheckMate b");
+			val+=10000000;
 		}
 		moves = b.getPossibleMoves();
-		val-=moves.size();
+		val-=moves.size()*5;
 		b.setColour(boardCol);
 		return val;
 	}
