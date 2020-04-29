@@ -83,6 +83,10 @@ public class Board {
 	public boolean isFinished() {
 		return finished;
 	}
+	
+	public void finish() {
+		finished = true;
+	}
 
 	public void setPiece(int index, Piece piece) {
 		pieces[index] = piece;

@@ -2,6 +2,8 @@ package game;
 
 import engine.Display;
 import engine.IGameLogic;
+import graphics.GUI;
+import graphics.RenderBlock;
 import input.Keyboard;
 import input.Mouse;
 import sound.SoundManager;
@@ -12,6 +14,8 @@ public class Game implements IGameLogic {
 	
 	private Display window;
 	
+	private GUI gui;
+	
 	private SoundManager soundManager;
 	
 	private Mouse mouse;
@@ -21,14 +25,15 @@ public class Game implements IGameLogic {
 
 	public Game() {
 		renderer = new Renderer();
-		gameState = new ChessGameState();
 		soundManager = new SoundManager();
+		gameState = new ChessGameState();
 	}
 
 	@Override
 	public void init(Display window) throws Exception {
 		this.window = window;
 		renderer.init(window);
+		gui = new GUI();
 		gameState.initState(this);
 		gameState.loadState();
 	}
@@ -52,6 +57,8 @@ public class Game implements IGameLogic {
 	@Override
 	public void render() {
 		gameState.render(renderer);
+		for (RenderBlock rb : gui.getGUIObjects())
+			renderer.render(rb, false);
 	}
 
 	@Override
@@ -64,6 +71,18 @@ public class Game implements IGameLogic {
 	public void setGameState(IGameState gameState) {
 		this.gameState = gameState;
 	}
+
+	public Display getWindow() {
+		return window;
+	}
+	
+	public GUI getGUI() {
+		return gui;
+	}
+	
+	public SoundManager getSoundManager() {
+		return soundManager;
+	}
 	
 	public Keyboard getKeyboard() {
 		return keyboard;
@@ -73,11 +92,4 @@ public class Game implements IGameLogic {
 		return mouse;
 	}
 
-	public SoundManager getSoundManager() {
-		return soundManager;
-	}
-
-	public Display getWindow() {
-		return window;
-	}
 }

@@ -10,10 +10,9 @@ import chess.Player;
 
 public class BetterPlayer extends Player {
 
-	int bestVal;
-	int bestMove;
-	int checkBonus;
-	int checkmateBonus;
+	private int bestVal;
+	private int bestMove;
+	private int checkBonus;
 	
 	@Override
 	protected void process() {
@@ -21,16 +20,22 @@ public class BetterPlayer extends Player {
 		ArrayList<Integer> bestMoves = new ArrayList<>();
 		ArrayList<Integer> bestVals = new ArrayList<>();
 		
+		checkBonus = 25;
 		bestVal = -99999;
 		bestMove = -1;
 		
 		Colour colour = board.getColour();
+		
 		ArrayList<Integer> values = new ArrayList<>();
 		int counter = 0;
 		for (Move m : moves) {
 			Board tmpBoard = board.move(m);
 			tmpBoard.setupNextMove();
-			int val = tmpBoard.getBoardValue(colour);
+			int val = minimax(m, board, 4);
+			
+			if (tmpBoard.isCheck()) {
+				val += checkBonus;
+			}
 			
 			if (tmpBoard.isCheckmate()) {
 				setChosenMove(counter);
@@ -46,13 +51,12 @@ public class BetterPlayer extends Player {
 			values.add(val);
 			counter++;
 		}
-		System.out.println(bestMoves);
 		
 		int bM = bestMove;
 		if (bestMoves.size() > 3) {
 			do {
 				bM = bestMoves.get(rand.nextInt(bestMoves.size()));
-			} while (Math.abs(bestVals.get(bestMoves.indexOf(bM)) - bestVals.get(bestVals.size() - 1)) > 20);
+			} while (Math.abs(bestVals.get(bestMoves.indexOf(bM)) - bestVals.get(bestVals.size() - 1)) > 10);
 
 		}
 		
@@ -87,9 +91,9 @@ public class BetterPlayer extends Player {
 		
 		setChosenMove(bestMove);
 	}
-	
+	*/
 	private int minimax(Move move, Board board, int depth) {
-		if (depth == 0) return board.getBoardValue(); 
+		if (depth == 0) return board.getBoardValue(Colour.WHITE); 
 		
 		Board tmpBoard = board.move(move);
 		tmpBoard.setupNextMove();
@@ -107,6 +111,5 @@ public class BetterPlayer extends Player {
 
 		return val;
 	}
-	*/
 
 }

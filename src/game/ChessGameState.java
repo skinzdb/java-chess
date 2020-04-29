@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
-import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
 import chess.Move;
+import chess.Piece;
 import chess.Player;
-import david.betelgeuse.BetterPlayer;
 import graphics.Camera;
+import graphics.GUIImage;
+import graphics.GUIText;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
 import joe.uranus.RandomPlayer;
-import joe.uranus.UranusPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -37,10 +37,17 @@ public class ChessGameState implements IGameState {
 	private Texture boardTex;
 	private Texture piecesTex;
 	
-	ArrayList<Sprite> boardTiles;
-	ArrayList<Sprite> pieceTiles;
+	private ArrayList<Sprite> boardTiles;
+	private ArrayList<Sprite> pieceTiles;
+	
+	private ArrayList<Sprite> takenWhitePieces;
+	private ArrayList<Sprite> takenBlackPieces;
 	
 	private Camera cam;
+	
+	private GUIText turnText;
+	private GUIImage takenWImg;
+	private GUIImage takenBImg;
 	
 	@Override
 	public void initState(Game game) {
@@ -54,17 +61,28 @@ public class ChessGameState implements IGameState {
 		boardTiles = new ArrayList<>();
 		pieceTiles = new ArrayList<>();
 		
+		takenWhitePieces = new ArrayList<>();
+		takenBlackPieces = new ArrayList<>();
+		
 		cam = new Camera();
 		cam.setScale(60);
-		cam.translate(3.5f, -3.5f);
+		cam.translate(3.5f, -2.5f);
+		
+		game.getGUI().getCam().setScale(16);
+		game.getGUI().getCam().translate(14f, -18f);
 
-		//whitePlayer = new RandomPlayer();
-		whitePlayer = new UranusPlayer(Colour.WHITE);
+		whitePlayer = new RandomPlayer();
+		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		//blackPlayer = new HumanPlayer(cam, game.getMouse());
 		blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
 		
 		currentSelSquare = -1;
 		
+		turnText = game.getGUI().text("", 0, -0.5f, 16, 2, 1.55f);
+		takenWImg = game.getGUI().image(piecesTex, 0, -4f, 10, 2, 1.45f);
+		takenBImg = game.getGUI().image(piecesTex, 15, -4f, 10, 2, 1.45f);
+
 		updateTiles();
 		
 		getNextMove();
@@ -87,6 +105,10 @@ public class ChessGameState implements IGameState {
 		boardTiles.clear();
 		
 		ArrayList<Integer> moveMap = new ArrayList<>();
+		
+		if (board.isFinished()) {
+			currentSelSquare = -1;
+		}
 		
 		if (currentSelSquare != - 1) {
 			moveMap = Mapping.createMoveMap(currentSelSquare, board);
@@ -112,6 +134,27 @@ public class ChessGameState implements IGameState {
 		}
 	}
 	
+	private void updateGUI() {
+		turnText.setText(board.getColour() + "'S TURN");
+		
+		takenWhitePieces.clear();
+		takenBlackPieces.clear();
+		
+		for (Piece piece : board.getTakenPieces()) {
+			Sprite s = new Sprite(Geometry.quad, piecesTex);
+			s.setPointer(piece.getImageIndex());
+			
+			if (piece.getColour() == Colour.WHITE) {
+				takenWhitePieces.add(s);
+			} else if (piece.getColour() == Colour.BLACK) {
+				takenBlackPieces.add(s);
+			}
+		}
+		
+		takenWImg.setSprites(takenWhitePieces);
+		takenBImg.setSprites(takenBlackPieces);
+	}
+	
 	private Player getCurrentPlayer() {
 		return board.getColour() == Colour.WHITE ? whitePlayer : blackPlayer;
 	}
@@ -122,11 +165,21 @@ public class ChessGameState implements IGameState {
 		currentSelSquare = -1;
 		updateTiles();
 		
+		updateGUI();
+		
+		if (board.getTakenPieces().size() == 30) { // only two kings left
+			board.finish();
+		}
+		
 		if (board.isFinished()) {
-			if (board.isCheckmate())
-				System.out.println("CHECKMATE! " + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + " WINS");
+			if (board.isCheckmate()) {
+				turnText.setText("CHECKMATE!\n" + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + " WINS!");
+			}
 			else if (board.isStalemate()) 
-				System.out.println("STALEMATE!\n");
+				turnText.setText("STALEMATE!\nIT'S A DRAW!");
+			else {
+				turnText.setText("GAME ENDED!\nIT'S A DRAW!");
+			}
 			
 			whitePlayer.stop();
 			blackPlayer.stop();
@@ -141,7 +194,7 @@ public class ChessGameState implements IGameState {
 		startTime = System.nanoTime();
 		duration = 0;
 		
-		currentPlayerThread = new Thread(getCurrentPlayer());
+		currentPlayerThread = new Thread(getCurrentPlayer(), "CURRENT_PLAYER_THREAD");
 		currentPlayerThread.start();
 	}
 	

@@ -10,6 +10,7 @@ import engine.Display;
 import engine.Utils;
 import graphics.Camera;
 import graphics.Light;
+import graphics.RenderBlock;
 import graphics.Sprite;
 import graphics.TexturedMesh;
 import graphics.Transformation;
@@ -96,7 +97,7 @@ public class Renderer {
 
 		shaderProgram.setUniform("textureSampler", 0);
 
-		// Render each gameObject
+		// Render each sprite
 		if (sprites != null) {
 			for (Sprite sprite : sprites) {
 				TexturedMesh mesh = sprite.getMesh();
@@ -114,6 +115,10 @@ public class Renderer {
 		}
 
 		shaderProgram.unbind();
+	}
+	
+	public void render(RenderBlock renderBlock, boolean clear) {
+		render(renderBlock.getCamera(), renderBlock.getSprites(), clear);
 	}
 
 	public void setLights(ArrayList<Light> lights) {

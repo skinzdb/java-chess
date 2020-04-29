@@ -47,15 +47,15 @@ public class Utility {
 
 		for (int i = 0; i < 8; i++) {
 			String[] rowData = FEN_board[i].split("");
+			int counter = 0;
 			for (int j = 0; j < 8; j++) {
 				int index = (i * 8) + j;
-				String s = rowData[j];
-				
+				String s = rowData[counter++];
 				if (Utility.isNumeric(s)) {
 					for (int k = index; k < index + Integer.parseInt(s); k++) {
 						board.setPiece(k, new Piece());
 					}
-					j += Integer.parseInt(s);
+					j += Integer.parseInt(s) - 1;
 				} else {
 					board.setPiece(index, determinePiece(s));
 				}

@@ -22,8 +22,6 @@ public class HumanPlayer extends Player {
 		currentSelection = -1; 
 		setSelectedSquare(-1); 
 		
-		System.out.println(board.getColour() + "'s turn\n");
-		
 		while (getChosenMove() == -1 && isRunning()) {
 			Vector2f mousePos = mouse.getWorldPos(cam);
 			

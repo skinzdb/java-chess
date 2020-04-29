@@ -19,18 +19,19 @@ public class GameLoader {
 			if (FEN == null) {
 				return null;
 			}
+			
+			Utility.loadFEN(board, FEN.get(FEN.size() - 1));
 
-			Utility.loadFEN(board, FEN.get(FEN.size() - 3));
-
-			for (int i = 0; i < FEN.size() - 3; i++) {
+			for (int i = 0; i < FEN.size(); i++) {
 				board.getGameMoves().add(FEN.get(i));
 			}
 
-			for (String piece : FEN.get(FEN.size() - 2).split("")) {
-				board.getTakenPieces().add(Utility.determinePiece(piece));
-			}
+			//for (String piece : FEN.get(FEN.size() - 2).split("")) {
+			//	board.getTakenPieces().add(Utility.determinePiece(piece));
+			//}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			//MessageBox.display("Error", "Could not load game file");
 			return null;
 		}

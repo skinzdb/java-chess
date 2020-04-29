@@ -31,12 +31,12 @@ public class Camera extends GameObject {
 						Math.round(position.y * scale) / scale);
 		}
 	}
-	
+
 	public void lockPosition(float left, float top, float right, float bottom, Display window) {
-		position.x = Math.max(position.x, left + window.getWidth()/scale/2-0.5f);
-		position.x = Math.min(position.x, right - window.getWidth()/scale/2-0.5f);
-		position.y = Math.max(position.y, -bottom + window.getHeight()/scale/2+0.5f);
-		position.y = Math.min(position.y, -top - window.getHeight()/scale/2+0.5f);
+		position.x = Math.max(position.x, left + window.getWidth() / scale / 2 - 0.5f);
+		position.x = Math.min(position.x, right - window.getWidth() / scale / 2 - 0.5f);
+		position.y = Math.max(position.y, -bottom + window.getHeight() / scale / 2 + 0.5f);
+		position.y = Math.min(position.y, -top - window.getHeight() / scale / 2 + 0.5f);
 	}
 
 	public float getMinBright() {
