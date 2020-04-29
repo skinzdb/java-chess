@@ -1,10 +1,12 @@
 package game;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
+import chess.GameSaver;
 import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
@@ -44,6 +46,7 @@ public class ChessGameState implements IGameState {
 	
 	@Override
 	public void initState(Game game) {
+		//board = GameLoader.load(new File("res/fool.txt"));
 		board = GameLoader.loadDefault();
 		
 		currentMoves = new ArrayList<>();
@@ -60,8 +63,12 @@ public class ChessGameState implements IGameState {
 
 		//whitePlayer = new RandomPlayer();
 		whitePlayer = new UranusPlayer(Colour.WHITE);
-		blackPlayer = new RandomPlayer();
+		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
+		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		//whitePlayer = new BetterPlayer();
+		//whitePlayer = new UranusPlayer(Colour.WHITE);
+		blackPlayer = new BetterPlayer();
 		
 		currentSelSquare = -1;
 		
@@ -86,6 +93,10 @@ public class ChessGameState implements IGameState {
 	private void updateTiles() {
 		boardTiles.clear();
 		
+		if(board.isFinished()) {
+			currentSelSquare = -1;
+			GameSaver.saveGame("game.cgm", board);
+		}
 		ArrayList<Integer> moveMap = new ArrayList<>();
 		
 		if (currentSelSquare != - 1) {

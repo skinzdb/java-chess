@@ -32,9 +32,9 @@ public class BoardState {
 		Piece BoardPieceMap[] = b.getPieces();
 		for(int i = 0; i < 64; i++) {
 			if(!BoardPieceMap[i].isEmpty()) {
-				pieceMap |= 1<<i;
+				pieceMap |= 1L<<i;
 				
-				int pieceval = 0;
+				long pieceval = 0;
 				if(BoardPieceMap[i] instanceof Pawn) {
 					pieceval = 0;
 				}
@@ -57,7 +57,7 @@ public class BoardState {
 					pieceval += 8;
 				}
 				
-				pieceData[pieceNo/16] = pieceval<<((pieceNo%16)*4);
+				pieceData[pieceNo/16] |= pieceval<<((pieceNo%16)*4);
 				pieceNo++;
 			}
 		}
@@ -79,8 +79,8 @@ public class BoardState {
 		Piece[] ps = b.getPieces();
 		int pCounter = 0;
 		for(int i = 0; i < 64; i++) {
-			if((pieceMap&(1<<i)) != 0) {
-				int pieceCode = (int) (pieceData[pCounter / 16] >> ((pCounter % 16) * 4)) & 0xf;
+			if((pieceMap&(1L<<i)) != 0) {
+				long pieceCode = (pieceData[pCounter / 16] >> ((pCounter % 16) * 4)) & 0xf;
 				if(pieceCode == 0) {
 					ps[i] = new Pawn(Colour.WHITE);
 				}
@@ -117,6 +117,7 @@ public class BoardState {
 				else if(pieceCode == 13) {
 					ps[i] = new King(Colour.BLACK);
 				}
+				pCounter++;
 			}
 			else {
 				ps[i] = new Piece();
