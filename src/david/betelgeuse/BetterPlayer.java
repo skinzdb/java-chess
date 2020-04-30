@@ -31,7 +31,7 @@ public class BetterPlayer extends Player {
 		for (Move m : moves) {
 			Board tmpBoard = board.move(m);
 			tmpBoard.setupNextMove();
-			int val = minimax(m, board, 4);
+			int val = minimax(m, board, 3);
 			
 			if (tmpBoard.isCheck()) {
 				val += colour == Colour.WHITE ? checkBonus : -checkBonus;
