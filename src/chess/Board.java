@@ -151,6 +151,10 @@ public class Board {
 	public void setTakenPieces(ArrayList<Piece> takenPieces) {
 		this.takenPieces = takenPieces;
 	}
+	
+	public int getMoveNumber() {
+		return gameMoves.size();
+	}
 
 	public Board move(int from, int to) {
 		if (checkmate || stalemate) {

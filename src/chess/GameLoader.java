@@ -19,8 +19,6 @@ public class GameLoader {
 			if (FEN == null) {
 				return null;
 			}
-			
-			Utility.loadFEN(board, FEN.get(FEN.size() - 1));
 
 			for (int i = 0; i < FEN.size(); i++) {
 				String line = FEN.get(i);
@@ -34,7 +32,8 @@ public class GameLoader {
 					if (i == FEN.size() - 1) Utility.loadFEN(board, line);
 				}
 			}
-
+			
+		board.checkAll();
 
 		} catch (Exception e) {
 			e.printStackTrace();

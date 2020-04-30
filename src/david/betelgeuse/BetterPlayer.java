@@ -1,123 +1,146 @@
 package david.betelgeuse;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import chess.Board;
 import chess.Colour;
+import chess.King;
+import chess.Knight;
 import chess.Move;
+import chess.Piece;
 import chess.Player;
 
 public class BetterPlayer extends Player {
 
+	private int depth;
 	private int bestVal;
 	private int bestMove;
-	private int checkBonus;
+	
+	private boolean isWhite;
+	
+	private int[] wKingWeights = new int[] 
+			{ -2, -2, -3, -4, -4, -3, -2, -2,
+			  -2, -2, -3, -4, -4, -3, -2, -2,
+			  -2, -2, -3, -4, -4, -3, -2, -2,
+			  -2, -2, -3, -4, -4, -3, -2, -2,
+			  -2, -2, -3, -3, -3, -3, -2, -2,
+			  -1, -1, -3, -2, -2, -3, -1, -1,
+			   1,  1,  0,  0,  0,  0,  1,  1,
+			   2,  2,  1,  0,  0,  1,  2,  2
+			  };
+	
+	private int[] bKingWeights;
+	
+	private int[] wKnightWeights = new int[]
+			{ -4, -3, -2, -2, -2, -2, -3, -4,
+			  -3, -2,  0, -1, -1,  0, -2, -2,
+			  -2,  0,  0,  0,  0,  0,  0, -2,
+		      -2,  0,  1,  1,  1,  1,  0, -2,
+			  -2,  0,  1,  1,  1,  1,  0, -2,
+			  -2,  0,  0,  0,  0,  0,  0, -2,
+			  -3, -2,  0,  0,  0,  0, -2, -3,
+			  -4, -3, -2, -2, -2, -2, -3, -4
+			};
+	
+	private int[] bKnightWeights;
+	
+	private int[] wPawnWeights = new int[]
+			{
+					
+					
+					
+			};
+
+	private int[] reverse(int a[], int n) {
+		int[] b = new int[n];
+		int j = n;
+		for (int i = 0; i < n; i++) {
+			b[j - 1] = a[i];
+			j = j - 1;
+		}
+
+		return b;
+	}
+	
+	public BetterPlayer(int depth) {
+		this.depth = depth;
+		bKingWeights = reverse(wKingWeights, 64);
+		bKnightWeights = reverse(wKnightWeights, 64);
+	}
 	
 	@Override
 	protected void process() {
-		Random rand = new Random();
-		ArrayList<Integer> bestMoves = new ArrayList<>();
-		ArrayList<Integer> bestVals = new ArrayList<>();
+		isWhite = board.getColour() == Colour.WHITE;
 		
-		Colour colour = board.getColour();
-		
-		checkBonus = 25;
-		bestVal = colour == Colour.WHITE ? -10000 : 10000;
+		bestVal = isWhite ? -10000 : 10000;
 		bestMove = -1;
 	
 		ArrayList<Integer> values = new ArrayList<>();
 		int counter = 0;
 		for (Move m : moves) {
 			Board tmpBoard = board.move(m);
-			tmpBoard.setupNextMove();
-			int val = minimax(m, board, 3);
+			int val = minimax(tmpBoard, !isWhite, -10000, 10000, depth);
 			
-			if (tmpBoard.isCheck()) {
-				val += colour == Colour.WHITE ? checkBonus : -checkBonus;
-			}
-			
-			if (tmpBoard.isCheckmate()) {
-				setChosenMove(counter);
-				return;
-			}
-			tmpBoard.swapColour();
-			if (tmpBoard.isCheckmate()) {
-				if (colour == Colour.WHITE) 
-					val -= 100000;
-				else
-					val += 100000;
-			}
-			tmpBoard.swapColour();
-			
-			if ((val > bestVal) == (colour == Colour.WHITE)) {
+			if ((val > bestVal) == isWhite) {
 				bestVal = val;
-				bestMoves.add(counter);
-				bestVals.add(val);
 				bestMove = counter;
 			}
 			values.add(val);
 			counter++;
 		}
 		
-		int bM = bestMove;
-		if (bestMoves.size() > 3) {
-			do {
-				bM = bestMoves.get(rand.nextInt(bestMoves.size()));
-			} while (Math.abs(bestVals.get(bestMoves.indexOf(bM)) - bestVals.get(bestVals.size() - 1)) > 10);
-
-		}
-		
-		setChosenMove(bM);
-	}
-	
-	/*
-	@Override
-	protected void process() {
-		Collections.shuffle(moves);
-		colour = board.getColour();
-		
-		bestVal = colour == Colour.WHITE ? -10000 : 10000;
-		
-		for (int i = 0; i < moves.size(); i++) {
-			int val = minimax(moves.get(i), board, 3);
-
-			System.out.println(val);
-			
-			if (colour == Colour.WHITE) {
-				if (val > bestVal) {
-					bestMove = i;
-					bestVal = val;
-				}
-			} else {
-				if (val < bestVal) {
-					bestMove = i;
-					bestVal = val;
-				}
-			}
-		}
-		
 		setChosenMove(bestMove);
 	}
-	*/
-	private int minimax(Move move, Board board, int depth) {
-		if (depth == 0) return board.getBoardValue(Colour.WHITE); 
+
+	private int minimax(Board bd, boolean isWhite, int a, int b, int depth) {
+		if (depth == 0) return boardEval(bd);
 		
-		Board tmpBoard = board.move(move);
-		tmpBoard.setupNextMove();
+		bd.setupNextMove();
 		
-		int val = tmpBoard.getColour() == Colour.WHITE ? -10000 : 10000;
+		int val = isWhite ? -9999 : 9999;
 		
-		for (Move m : tmpBoard.getPossibleMoves()) {
-			int tmpVal = minimax(m, tmpBoard, depth - 1);
-			if (tmpBoard.getColour() == Colour.WHITE) {
+		for (Move m : bd.getPossibleMoves()) {
+			Board newBoard = bd.move(m);
+			int tmpVal = minimax(newBoard, !isWhite, a, b, depth - 1);
+			if (isWhite) {
 				val = Math.max(val, tmpVal);
+				a = Math.max(a, val);
 			} else {
 				val = Math.min(val, tmpVal);
+				b = Math.min(b, val);
 			}
+			if (b <= a) break;
 		}
 
 		return val;
+	}
+	
+	private int boardEval(Board bd) {
+		int total = 0;
+		for (int i = 0; i < 64; i++) {
+			total += eval(bd, i);
+		}
+		return total;
+	}
+	
+	private int eval(Board bd, int i) {
+		Piece p = bd.getPiece(i);
+		
+		if (p.isEmpty()) return 0;
+		
+		boolean w = p.getColour() == Colour.WHITE;
+		int avalue = p.getValue();
+		
+		if (p instanceof King) {
+			avalue *= 5 + (w ? wKingWeights[i] : bKingWeights[i]);
+		} else if (p instanceof Knight) {
+			avalue += (w ? wKnightWeights[i] : bKnightWeights[i]);
+		} 
+		
+		if (bd.isCheckmate()) avalue += 1000;
+		if (bd.isCheck()) avalue += 5;
+		
+		return w ? avalue : -avalue;
 	}
 
 }
