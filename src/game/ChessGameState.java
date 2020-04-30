@@ -23,6 +23,7 @@ import graphics.GUIText;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
+import joe.demon.SpeedDemon;
 import joe.uranus.RandomPlayer;
 import joe.uranus.UranusPlayer;
 import input.Keyboard;
@@ -94,8 +95,9 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().translate(14f, -18f);
 
 		//whitePlayer = new RandomPlayer();
-		whitePlayer = new BetterPlayer(3);
-		//whitePlayer = new UranusPlayer(Colour.WHITE);
+		//whitePlayer = new BetterPlayer();
+		//whitePlayer = new SpeedDemon();
+		whitePlayer = new UranusPlayer(Colour.WHITE);
 		//whitePlayer = new HumanPlayer(cam, game.getMouse());
 		blackPlayer = new BetterPlayer(1);
 		//blackPlayer = new RandomPlayer();

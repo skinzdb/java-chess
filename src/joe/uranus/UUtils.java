@@ -62,7 +62,7 @@ public class UUtils {
 												   3,3,3,3,3,3,3,3};
 	
 	public static int evalBoard(Board b) {
-		int val = b.getBoardValue(Colour.WHITE)*25;
+		int val = b.getBoardValue(Colour.WHITE)*55;
 		Colour boardCol = b.getColour();
 
 		int posCounter = 0;
@@ -91,8 +91,12 @@ public class UUtils {
 			//System.out.println("CheckMate w");
 			val-=1000000;
 		}
-		//ArrayList<Move> moves = b.getPossibleMoves();
-		//val+=moves.size()*5;
+		if(b.isCheck()) {
+			//System.out.println("CheckMate w");
+			val-=100;
+		}
+		ArrayList<Move> moves = b.getPossibleMoves();
+		val+=moves.size()*5;
 		b.setEnPassant(-1);
 		
 		b.setColour(Colour.BLACK);
@@ -101,8 +105,12 @@ public class UUtils {
 			//System.out.println("CheckMate b");
 			val+=10000000;
 		}
-		//moves = b.getPossibleMoves();
-		//val-=moves.size()*5;
+		if(b.isCheck()) {
+			//System.out.println("CheckMate w");
+			val+=100;
+		}
+		moves = b.getPossibleMoves();
+		val-=moves.size()*5;
 		b.setColour(boardCol);
 		return val;
 	}
