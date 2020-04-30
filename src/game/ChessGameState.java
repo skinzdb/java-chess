@@ -37,6 +37,12 @@ public class ChessGameState implements IGameState {
 	private Player whitePlayer;
 	private Player blackPlayer;
 	
+	private int whiteScore = 1000;
+	private int blackScore = 1000;
+	private float timeLimit = 0.4f;
+	
+	private ArrayList<Float> moveDurations = new ArrayList<>();
+	
 	private int currentSelSquare;
 	
 	private ArrayList<Move> currentMoves;
@@ -88,10 +94,10 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().translate(14f, -18f);
 
 		//whitePlayer = new RandomPlayer();
-		//whitePlayer = new BetterPlayer();
-		whitePlayer = new UranusPlayer(Colour.WHITE);
+		whitePlayer = new BetterPlayer(3);
+		//whitePlayer = new UranusPlayer(Colour.WHITE);
 		//whitePlayer = new HumanPlayer(cam, game.getMouse());
-		blackPlayer = new BetterPlayer(3);
+		blackPlayer = new BetterPlayer(1);
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
 		//blackPlayer = new HumanPlayer(cam, game.getMouse());
@@ -192,7 +198,14 @@ public class ChessGameState implements IGameState {
 		
 		if (board.isFinished()) {
 			if (board.isCheckmate()) {
+				calcScores();
+				if (board.getColour() == Colour.WHITE) {
+					whiteScore -= 1000;
+				} else {
+					blackScore -= 1000;
+				}
 				turnText.setText("CHECKMATE!\n" + (board.getColour() == Colour.WHITE ? "BLACK" : "WHITE") + " WINS!");
+				System.out.println("Scores:\n" + " -> WHITE: " + whiteScore + "\n -> BLACK: " + blackScore); 
 			}
 			else if (board.isStalemate()) 
 				turnText.setText("STALEMATE!\nIT'S A DRAW!");
@@ -219,6 +232,30 @@ public class ChessGameState implements IGameState {
 		currentPlayerThread.start();
 	}
 	
+	private void calcScores() {
+		float meanWhite = 0, meanBlack = 0;
+		
+		int moveNo = moveDurations.size();
+		
+		for (int i = 0; i < moveNo; i++) {
+			if ((i & 1) == 0) {
+				meanWhite += moveDurations.get(i);
+			} else {
+				meanBlack += moveDurations.get(i);
+			}
+		}
+		
+		meanWhite = meanWhite / (float) Math.ceil((moveNo / 2.0f));
+		meanBlack = meanBlack / (float) (moveNo / 2);
+		
+		if (meanWhite > timeLimit) 
+			whiteScore = (int) ((timeLimit / meanWhite) * whiteScore);
+		if (meanBlack > timeLimit)
+			blackScore = (int) ((timeLimit / meanBlack) * blackScore);
+		
+		System.out.println("Mean time:\n" + " -> WHITE: " + meanWhite + "s\n -> BLACK: " + meanBlack + "s"); 
+	}
+	
 	@Override
 	public void loadState() {
 		
@@ -239,9 +276,10 @@ public class ChessGameState implements IGameState {
 			board = board.move(currentMoves.get(move));
 			board.setupNextMove();
 
-			long finishTime = (System.nanoTime() - startTime);
-			duration = finishTime / 100000L / 10000.0f;
+			long rawDuration = (System.nanoTime() - startTime);
+			duration = rawDuration / 100000L / 10000.0f;
 			System.out.println("Move duration: " + duration + "s\n");
+			moveDurations.add(duration);
 			
 			getNextMove();
 		}
