@@ -11,7 +11,6 @@ import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
 import chess.GameSaver;
-import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
 import chess.Move;
@@ -25,6 +24,7 @@ import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
 import input.Keyboard;
+import joe.uranus.RandomPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -64,7 +64,7 @@ public class ChessGameState implements IGameState {
 	@Override
 	public void initState(Game game) {
 		this.game = game;
-		//board = GameLoader.load(new File("res/fool.txt"));
+		//board = GameLoader.load("res/game.txt");
 		board = GameLoader.loadDefault();
 		
 		currentMoves = new ArrayList<>();
@@ -85,14 +85,15 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().setScale(16);
 		game.getGUI().getCam().translate(14f, -18f);
 
-		//whitePlayer = new RandomPlayer();
+		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		whitePlayer = new RandomPlayer();
 		//whitePlayer = new RandomPlayer();
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
-		whitePlayer = new HumanPlayer(cam, game.getMouse());
+		//whitePlayer = new RandomPlayer(0);
 		//whitePlayer = new BetterPlayer();
 		//whitePlayer = new UranusPlayer(Colour.WHITE);
-		blackPlayer = new BetterPlayer();
+		blackPlayer = new BetterPlayer(3);
 		
 		currentSelSquare = -1;
 		
@@ -252,12 +253,13 @@ public class ChessGameState implements IGameState {
 	
 	private void updateInput() {
 		Keyboard keyboard = game.getKeyboard();
-		
-		if (keyboard.keyUp(GLFW.GLFW_KEY_LEFT_CONTROL) && keyboard.keyUp(GLFW.GLFW_KEY_S)) { // save game
+
+		if (keyboard.keyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && keyboard.keyDown(GLFW.GLFW_KEY_S)) { // save game
 			saveGame("GAME (MIDWAY)");
 		}
 		
 		keyboard.resetState();
+		
 	}
 
 	private void saveGame(String filename) {
