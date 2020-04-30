@@ -19,14 +19,14 @@ import chess.Player;
 public class UranusPlayer extends Player{
 
 	//private final long treeTime = 1000000000L;
-	private final long treeTime = 2000000000L;
+	private final long treeTime = 20000000000000L;
 	private Colour colour;
 	private PrintWriter joesdump;
 	
 	private Random rand = new Random();
 	private BoardState masterState;
 	
-	private static final int ordercap = 10;
+	private static final int ordercap = 3;
 	
 	public UranusPlayer(Colour col) {
 		colour = col;

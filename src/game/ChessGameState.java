@@ -88,13 +88,13 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().translate(14f, -18f);
 
 		//whitePlayer = new RandomPlayer();
-		//whitePlayer = new RandomPlayer();
+		//whitePlayer = new BetterPlayer();
+		whitePlayer = new UranusPlayer(Colour.WHITE);
+		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		blackPlayer = new BetterPlayer();
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
-		whitePlayer = new HumanPlayer(cam, game.getMouse());
-		//whitePlayer = new BetterPlayer();
-		//whitePlayer = new UranusPlayer(Colour.WHITE);
-		blackPlayer = new BetterPlayer();
+		//blackPlayer = new HumanPlayer(cam, game.getMouse());
 		
 		currentSelSquare = -1;
 		
