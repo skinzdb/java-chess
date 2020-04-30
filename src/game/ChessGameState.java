@@ -235,6 +235,8 @@ public class ChessGameState implements IGameState {
 	}
 	
 	private void calcScores() {
+		whiteScore = 1000;
+		blackScore = 1000;
 		float meanWhite = 0, meanBlack = 0;
 		
 		int moveNo = moveDurations.size();
@@ -317,6 +319,8 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void exitState() {
+		calcScores();
+		System.out.println("Scores:\n" + " -> WHITE: " + whiteScore + "\n -> BLACK: " + blackScore); 
 		whitePlayer.stop();
 		blackPlayer.stop();
 	}
