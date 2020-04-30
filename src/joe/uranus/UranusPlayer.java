@@ -19,7 +19,7 @@ import chess.Player;
 public class UranusPlayer extends Player{
 
 	//private final long treeTime = 1000000000L;
-	private final long treeTime = 20000000000000L;
+	private final long treeTime = 100000000L;
 	private Colour colour;
 	private PrintWriter joesdump;
 	

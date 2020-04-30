@@ -99,7 +99,7 @@ public class ChessGameState implements IGameState {
 		//whitePlayer = new SpeedDemon();
 		whitePlayer = new UranusPlayer(Colour.WHITE);
 		//whitePlayer = new HumanPlayer(cam, game.getMouse());
-		blackPlayer = new BetterPlayer(1);
+		blackPlayer = new BetterPlayer(2);
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
 		//blackPlayer = new HumanPlayer(cam, game.getMouse());
@@ -235,6 +235,8 @@ public class ChessGameState implements IGameState {
 	}
 	
 	private void calcScores() {
+		whiteScore = 1000;
+		blackScore = 1000;
 		float meanWhite = 0, meanBlack = 0;
 		
 		int moveNo = moveDurations.size();
@@ -317,6 +319,8 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void exitState() {
+		calcScores();
+		System.out.println("Scores:\n" + " -> WHITE: " + whiteScore + "\n -> BLACK: " + blackScore); 
 		whitePlayer.stop();
 		blackPlayer.stop();
 	}
