@@ -40,7 +40,7 @@ public class ChessGameState implements IGameState {
 	
 	private int whiteScore = 1000;
 	private int blackScore = 1000;
-	private float timeLimit = 0.4f;
+	private float timeLimit = 1.0f;
 	
 	private ArrayList<Float> moveDurations = new ArrayList<>();
 	
@@ -99,7 +99,7 @@ public class ChessGameState implements IGameState {
 		//whitePlayer = new SpeedDemon();
 		whitePlayer = new UranusPlayer(Colour.WHITE);
 		//whitePlayer = new HumanPlayer(cam, game.getMouse());
-		blackPlayer = new BetterPlayer(1);
+		blackPlayer = new BetterPlayer(2);
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
 		//blackPlayer = new HumanPlayer(cam, game.getMouse());
