@@ -91,8 +91,8 @@ public class UUtils {
 			//System.out.println("CheckMate w");
 			val-=1000000;
 		}
-		ArrayList<Move> moves = b.getPossibleMoves();
-		val+=moves.size()*5;
+		//ArrayList<Move> moves = b.getPossibleMoves();
+		//val+=moves.size()*5;
 		b.setEnPassant(-1);
 		
 		b.setColour(Colour.BLACK);
@@ -101,8 +101,8 @@ public class UUtils {
 			//System.out.println("CheckMate b");
 			val+=10000000;
 		}
-		moves = b.getPossibleMoves();
-		val-=moves.size()*5;
+		//moves = b.getPossibleMoves();
+		//val-=moves.size()*5;
 		b.setColour(boardCol);
 		return val;
 	}
