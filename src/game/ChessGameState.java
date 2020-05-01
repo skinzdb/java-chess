@@ -40,7 +40,7 @@ public class ChessGameState implements IGameState {
 	
 	private int whiteScore = 1000;
 	private int blackScore = 1000;
-	private float timeLimit = 1.0f;
+	private float timeLimit = 10.0f;
 	
 	private ArrayList<Float> moveDurations = new ArrayList<>();
 	
@@ -95,11 +95,11 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().translate(14f, -18f);
 
 		//whitePlayer = new RandomPlayer();
-		//whitePlayer = new BetterPlayer();
+		//whitePlayer = new BetterPlayer(3);
 		//whitePlayer = new SpeedDemon();
 		whitePlayer = new UranusPlayer(Colour.WHITE);
 		//whitePlayer = new HumanPlayer(cam, game.getMouse());
-		blackPlayer = new BetterPlayer(2);
+		blackPlayer = new BetterPlayer(3);
 		//blackPlayer = new RandomPlayer();
 		//blackPlayer = new UranusPlayer(Colour.BLACK);
 		//blackPlayer = new HumanPlayer(cam, game.getMouse());
@@ -235,8 +235,8 @@ public class ChessGameState implements IGameState {
 	}
 	
 	private void calcScores() {
-		whiteScore = 1000;
-		blackScore = 1000;
+		//whiteScore = 1000;
+		//blackScore = 1000;
 		float meanWhite = 0, meanBlack = 0;
 		
 		int moveNo = moveDurations.size();
@@ -319,7 +319,9 @@ public class ChessGameState implements IGameState {
 
 	@Override
 	public void exitState() {
-		calcScores();
+		if(!board.isFinished()) {
+			calcScores();
+		}
 		System.out.println("Scores:\n" + " -> WHITE: " + whiteScore + "\n -> BLACK: " + blackScore); 
 		whitePlayer.stop();
 		blackPlayer.stop();
