@@ -12,6 +12,7 @@ import chess.Move;
 import chess.Pawn;
 import chess.Piece;
 import chess.Player;
+import chess.Rook;
 import chess.Utility;
 
 public class BetterPlayer extends Player {
@@ -75,6 +76,17 @@ public class BetterPlayer extends Player {
 			  -1,  1,  1,  1,  1,  1,  1, -1,
 			  -1,  0,  0,  0,  0,  0,  0, -1,
 			  -2, -1, -1, -1, -1, -1, -1, -2
+			};
+	
+	private int[] bRookWeights = new int[]
+			{ -4,  0,  0,  0,  0,  0,  0, -4,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			   0,  0,  0,  0,  0,  0,  0, 0,
+			  -4,  0,  0,  0,  0,  0,  0, -4
 			};
 
 	private int[] reverse(int a[], int n) {
@@ -174,6 +186,8 @@ public class BetterPlayer extends Player {
 			avalue += (w ? wPawnWeights[i] : bPawnWeights[i]);
 		} else if (p instanceof Bishop) {
 			avalue += bishopWeights[i];
+		} else if (p instanceof Rook) {
+			avalue += bRookWeights[i];
 		}
 		
 		if (bd.isCheckmate()) avalue += 6969420;
