@@ -62,7 +62,7 @@ public class UUtils {
 												   3,3,3,3,3,3,3,3};
 	
 	public static int evalBoard(Board b) {
-		int val = b.getBoardValue(Colour.WHITE)*55;
+		int val = b.getBoardValue(Colour.WHITE)*45;
 		Colour boardCol = b.getColour();
 
 		int posCounter = 0;
@@ -75,10 +75,10 @@ public class UUtils {
 				int y = yPos+ mask[i+1];
 				if(x>=0 && x<8 && y>=0 && y<8) {
 					if(p.getColour() == Colour.WHITE) {
-						val+=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.WHITE?1:4) + WHITE_BONUS_MASK[x+(y<<3)]*5;
+						val+=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.WHITE?2:3) + WHITE_BONUS_MASK[x+(y<<3)]*3;
 					}
 					else {
-						val-=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.BLACK?1:4) + BLACK_BONUS_MASK[x+(y<<3)]*5;
+						val-=b.getPieces()[x+(y<<3)].getValue()*1*(b.getPieces()[x+(y<<3)].getColour()==Colour.BLACK?2:3) + BLACK_BONUS_MASK[x+(y<<3)]*3;
 					}
 				}
 			}
