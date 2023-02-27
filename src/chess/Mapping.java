@@ -139,6 +139,7 @@ public class Mapping {
             moveMap = King.addCastleMoves(index, board, moveMap);
         } else if (pieces[index] instanceof Pawn) {
             moveMap = Pawn.addAttackMoves(index, board);
+            moveMap = getCheckMoves(index, board, moveMap);	// can't en passant into check
         }
 
         if (board.isCheck() || Detection.checkThreat(index, board, colour)) { // if in check or piece is possibly pinned

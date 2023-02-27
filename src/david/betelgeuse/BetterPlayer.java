@@ -128,13 +128,10 @@ public class BetterPlayer extends Player {
 			}
 			values.add(val);
 			counter++;
-			
 		}
 		moveCounter++;
 		if (bestMove != -1)
 			lastMovedTo = moves.get(bestMove).to;
-		
-		System.out.println("DStats: " + getStatus(bestVal));
 		
 		setChosenMove(bestMove);
 	}
@@ -217,28 +214,6 @@ public class BetterPlayer extends Player {
 
 		return w ? val : -val;
 		
-	}
-	
-	private String getStatus(int myval) {
-		if (myval < -80) {
-			return ":(";
-		} else if (myval < -50) {
-			return "Ah shit not doing too well here.... ";
-		} else if (myval < -30) {
-			return "A minor setback, that is to be accepted";
-		} else if (myval < 5) {
-			return "Eh.";
-		} else if (myval < 30) {
-			return "Not baaaad, not baaaaaaaad";
-		} else if (myval < 50) {
-			return "fuckin owning";
-		} else if (myval < 70) {
-			return "Orange man bad, also fucking owning";
-		} else if (myval < 90) {
-			return "According to all known laws of aviation";
-		} else {
-			return "GOD MODE GODE MODE";
-		}
 	}
 	
 	private boolean fileContainsPawn(Board bd, int file, Colour c) {

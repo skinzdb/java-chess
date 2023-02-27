@@ -9,7 +9,7 @@ public class King extends Piece {
 		
 		FEN = colour == Colour.WHITE ? "K" : "k";
 		
-		value = 0;
+		value = 100;
 		
 		imageIndex = colour == Colour.WHITE ? 4 : 12;
 	}
@@ -35,7 +35,7 @@ public class King extends Piece {
 		int kingside = queenside + 7;
 
 		for (int i = queenside + 1; i < index; i++) {
-			if (!board.getPiece(i).isEmpty() || Detection.checkThreat(i, board, colour)) {
+			if (!board.getPiece(i).isEmpty() || (i > queenside + 1 && Detection.checkThreat(i, board, colour))) {
 				canQueenside = false;
 				break;
 			}
@@ -48,10 +48,10 @@ public class King extends Piece {
 			}
 		}
 
-		if (canQueenside) {
+		if (canQueenside && board.getPiece(queenside).colour == colour) {
 			moveMap.add(index - 2);
 		}
-		if (canKingside) {
+		if (canKingside && board.getPiece(kingside).colour == colour) {
 			moveMap.add(index + 2);
 		}
 

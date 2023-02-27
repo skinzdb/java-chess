@@ -11,6 +11,7 @@ import chess.Board;
 import chess.Colour;
 import chess.GameLoader;
 import chess.GameSaver;
+import chess.HumanPlayer;
 import chess.King;
 import chess.Mapping;
 import chess.Move;
@@ -23,11 +24,7 @@ import graphics.GUIText;
 import graphics.Geometry;
 import graphics.Sprite;
 import graphics.Texture;
-import joe.demon.SpeedDemon;
-import joe.uranus.RandomPlayer;
-import joe.uranus.UranusPlayer;
 import input.Keyboard;
-import joe.uranus.RandomPlayer;
 
 public class ChessGameState implements IGameState {
 
@@ -94,16 +91,9 @@ public class ChessGameState implements IGameState {
 		game.getGUI().getCam().setScale(16);
 		game.getGUI().getCam().translate(14f, -18f);
 
-		//whitePlayer = new RandomPlayer();
-		//whitePlayer = new BetterPlayer(3);
-		//whitePlayer = new SpeedDemon();
-		whitePlayer = new UranusPlayer(Colour.WHITE);
-		//whitePlayer = new HumanPlayer(cam, game.getMouse());
+		whitePlayer = new HumanPlayer(cam, game.getMouse());
 		blackPlayer = new BetterPlayer(3);
-		//blackPlayer = new RandomPlayer();
-		//blackPlayer = new UranusPlayer(Colour.BLACK);
-		//blackPlayer = new HumanPlayer(cam, game.getMouse());
-		
+
 		currentSelSquare = -1;
 		
 		turnText = game.getGUI().text("", 0, -0.5f, 16, 2, 1.55f);
